@@ -1,4 +1,5 @@
 using Smart_Home_IoT_Device_Management_API.Domain.Entities.Owned;
+using Smart_Home_IoT_Device_Management_API.Domain.Entities.UserAndDevicePermission;
 using Smart_Home_IoT_Device_Management_API.Domain.Enum;
 
 namespace Smart_Home_IoT_Device_Management_API.Domain.Entities;
@@ -28,16 +29,15 @@ public class Device
     // Relationships
     // Many To One
     public DeviceCategory DeviceCategory { get; set; } = null!;
+    public Guid DeviceCategoryId  { get; set; }
 
-    // Many To Many
-    public ICollection<User> User { get; set; } = new HashSet<User>(); 
-    
-    // One To Many
-    public ICollection<DeviceSetting> DeviceSettings { get; set; } = new HashSet<DeviceSetting>();
+    // One to Many (Device and UserDevicePermission) -> Many to Many (User and Device)
+    public ICollection<UserDevicePermission> UserDevicePermissions { get; set; } = new HashSet<UserDevicePermission>();
     
     // One To One
     public SensorData SensorData { get; set; } = null!;
     
     // Many To One
     public Location Location { get; set; } = null!;
+    public Guid LocationId { get; set; }
 }

@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using Smart_Home_IoT_Device_Management_API.Domain.Entities.UserAndDevicePermission;
+
 namespace Smart_Home_IoT_Device_Management_API.Domain.Entities;
 
 public class User
@@ -17,6 +20,6 @@ public class User
    // User has 5 smart bulbs (DeviceCategory:same , Device:different)
    // (Example: id:1 User has access {deviceId:1,permission:read})
    
-   // Many to Many
-    public ICollection<Device> Devices { get; set; } = new HashSet<Device>();
+   // One to Many (User and UserDevicePermission) -> Many to Many (User and Device)
+   public ICollection<UserDevicePermission> UserDevicePermissions { get; set; } = new HashSet<UserDevicePermission>();
 }
