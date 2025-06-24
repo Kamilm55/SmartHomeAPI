@@ -1,45 +1,72 @@
-namespace Smart_Home_IoT_Device_Management_API.Common;
+using Microsoft.AspNetCore.Mvc;
 
 public class ApiResponse<T>
 {
-    private bool IsSuccess { get; set; }
-    private string? Message { get; set; }
-    private T? Data { get; set; }
-    private object? Meta { get; set; }
-    private List<string>? Errors { get; set; }
-    
-    // Success without meta
-    public static ApiResponse<T> Success(T data, string? message = null)
+    public bool IsSuccess { get; set; }
+    public string? Message { get; set; }
+    public T? Data { get; set; }
+    public object? Meta { get; set; }
+   // public List<string>? Errors { get; set; }
+
+    // 200 OK - Success with data
+    public static ActionResult<ApiResponse<T>> Ok(T data, string? message = null)
     {
-        return new ApiResponse<T>
+        var res = new ApiResponse<T>
         {
             IsSuccess = true,
             Message = message,
             Data = data
         };
+        return new OkObjectResult(res);
     }
-        
-    //  Failure with message and optional errors
-    public static ApiResponse<T> Fail(string message, List<string>? errors = null)
+
+    // 201 Created - Resource created successfully
+    public static ActionResult<ApiResponse<T>> Created(T data, string location)
     {
-        return new ApiResponse<T>
+        var res = new ApiResponse<T>
+        {
+            IsSuccess = true,
+            Data = data
+        };
+        return new CreatedResult(location, res); // URI can be provided if needed
+    }
+
+    // 204 No Content - Success but no data to return
+    public static ActionResult<ApiResponse<T>> NoContent(string? message = null)
+    {
+        var res = new ApiResponse<T>
+        {
+            IsSuccess = true,
+            Message = message ?? "No content."
+        };
+        return new NoContentResult(); 
+    }
+    
+    // Paginated response (200 OK)
+    public static ActionResult<ApiResponse<T>> Paginated(T data, object meta, string? message = null)
+    {
+        var res = new ApiResponse<T>
+        {
+            IsSuccess = true,
+            Message = message,
+            Data = data,
+            Meta = meta
+        };
+        return new OkObjectResult(res);
+    }
+    
+    
+    // Error responses --> Done by Exception handler
+    // 500 Internal Server Error - Unexpected server error
+    /*public static ActionResult<ApiResponse<T>> InternalServerError(string message = "An unexpected error occurred.")
+    {
+        var res = new ApiResponse<T>
         {
             IsSuccess = false,
-            Message = message,
-            Errors = errors
+            Message = message
         };
-    }
-    
-    public static ApiResponse<T> Paginated(T data, object meta, string? message = null)
-        {
-            return new ApiResponse<T>
-            {
-                IsSuccess = true,
-                Message = message,
-                Data = data,
-                Meta = meta
-            };
-        }
-}
+        return new ObjectResult(res) { StatusCode = 500 };
+    }*/
 
     
+}

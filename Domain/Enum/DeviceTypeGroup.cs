@@ -10,5 +10,6 @@ public enum DeviceTypeGroup
     Cleaning = 5,
     Appliances = 6,
     Health = 7,
-    Networking = 8
+    Networking = 8,
+    ClimateControl = 9
 }

@@ -122,8 +122,8 @@ builder.Services.AddDbContext<SmartHomeContext>(options =>
 
 #### Device Management
 - `GET /api/devices` - Get all devices with related data
-- `GET /api/devices/{id}` - Get specific device with details
-- `POST /api/devices` - Add new device
+- `GET /api/devices/{id}` - Get specific device with details 
+- `POST /api/devices` - Add new device 
 - `PUT /api/devices/{id}` - Update device
 - `DELETE /api/devices/{id}` - Delete device
 
@@ -133,8 +133,8 @@ builder.Services.AddDbContext<SmartHomeContext>(options =>
 - `POST /api/locations` - Add new location
 
 #### User Management
-- `GET /api/users` - Get all users
-- `POST /api/users` - Add new user
+- `GET /api/users` - Get all users +
+- `POST /api/users` - Add new user +
 
 ### Phase 2: Data Operations
 
@@ -313,3 +313,12 @@ Your project will be evaluated on:
 6. **Documentation** - Clear README and API documentation
 
 Good luck with your project! Focus on getting the core functionality working first, then add advanced features.
+
+
+//
+✅ Design Summary
+I've structured  model like this:/
+
+* DeviceCategory: Describes reusable/shared properties of a type of IoT device (e.g., "Smart Bulb", "Thermostat").
+* Device: A physical instance of a device in the system, installed somewhere and uniquely identified.
+* DeviceTypeGroup: A higher-level optional classification (e.g., Lighting, Climate, Security)

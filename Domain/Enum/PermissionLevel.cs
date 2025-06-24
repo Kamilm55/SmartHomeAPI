@@ -4,6 +4,7 @@ public enum PermissionLevel
 {
     None = 0,
     Read = 1,
-    Control = 2,
+    // Control = 2,
+    ReadWrite = 2,
     Admin = 3
 }
