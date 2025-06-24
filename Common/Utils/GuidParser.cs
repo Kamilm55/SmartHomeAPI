@@ -5,10 +5,10 @@ namespace Smart_Home_IoT_Device_Management_API.Common.Utils;
 
 public static class GuidParser
 {
-    public static Guid Parse(string id)
+    public static Guid Parse(string id, string entityName)
     {
         if (!Guid.TryParse(id, out var guid))
-            throw new InvalidGuidException(id);
+            throw new InvalidGuidException(id,entityName );
 
         return guid;
     }

@@ -134,7 +134,8 @@ public static class SeedData
                 MotionSensitivity = null,
                 UpdateIntervalSeconds = 60
             },
-            SensorData = new SensorData // One To One
+            
+            SensorData = new SensorData // One to Many olmalidi
             {
                 Id = Guid.NewGuid(),
                 Voltage = 230,

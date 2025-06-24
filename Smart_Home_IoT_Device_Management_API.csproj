@@ -21,6 +21,7 @@
   <ItemGroup>
     <Folder Include="Application\Validators\" />
     <Folder Include="Domain\Common\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Tests\" />
   </ItemGroup>
 

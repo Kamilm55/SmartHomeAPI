@@ -47,6 +47,8 @@ namespace Smart_Home_IoT_Device_Management_API.Controllers
 
             return ApiResponse<UserResponse>.Created(createdUser, nameof(GetUserById) + new { id = createdUser.Id });
         }
+        
+        //
 
         [HttpPost("/login")]
         public async Task<ActionResult<ApiResponse<string>>> Login(LoginRequest request)

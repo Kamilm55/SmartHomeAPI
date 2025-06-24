@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Smart_Home_IoT_Device_Management_API.API.Middlewares;
+using Smart_Home_IoT_Device_Management_API.Application.Mappers;
 using Smart_Home_IoT_Device_Management_API.Application.Services;
 using Smart_Home_IoT_Device_Management_API.Infrastructure.Authentication;
 using Smart_Home_IoT_Device_Management_API.Infrastructure.Persistence;
@@ -52,6 +53,11 @@ builder.Services.AddAuthentication(options =>
 
 // Add services
 builder.Services.AddControllers();
+/*.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.DefaultIgnoreCondition = 
+        System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+});*/
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -59,10 +65,23 @@ builder.Services.AddScoped<IPasswordHasher,PasswordHasher>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
+builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+builder.Services.AddScoped<IDeviceService, DeviceService>();
+
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+
+builder.Services.AddScoped<ISensorReadingService, SensorReadingService>();
+builder.Services.AddScoped<ISensorReadingRepository, SensorReadingRepository>();
+
+builder.Services.AddScoped<IDeviceCategoryRepository, DeviceCategoryRepository>();
+
+builder.Services.AddSingleton<IMapper, CustomMapper>();
+
 
 // Print the connection string 
 builder.Logging.AddConsole();
-Console.Write("Connection string: " + connectionString);
+//Console.Write("Connection string: " + connectionString);
 
 
 // Swagger

@@ -5,6 +5,461 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/v1/devices": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseListApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseListApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceCreateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceCreateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/devices/{id}": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Device"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Device"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Location": {
+      "get": {
+        "tags": [
+          "Location"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationResponseListApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationResponseListApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationResponseListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Location"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationCreateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationCreateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Location/{id}/devices": {
+      "get": {
+        "tags": [
+          "Location"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceInLocationResponseListApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceInLocationResponseListApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceInLocationResponseListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/devices/{id}/readings": {
+      "post": {
+        "tags": [
+          "SensorReading"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensorDataRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensorDataRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensorDataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "SensorReading"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseListApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseListApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/devices/{id}/readings/latest": {
+      "get": {
+        "tags": [
+          "SensorReading"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDataResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/User/{id}": {
       "get": {
         "tags": [
@@ -163,6 +618,287 @@
   },
   "components": {
     "schemas": {
+      "DeviceCreateRequest": {
+        "type": "object",
+        "properties": {
+          "isActive": {
+            "type": "boolean"
+          },
+          "installedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "powerConsumption": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "macAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "brightness": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "temperatureThreshold": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "autoShutdown": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "motionSensitivity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "updateIntervalSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "deviceCategoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "locationId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceInLocationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceCategoryid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceCategoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "$ref": "#/components/schemas/DeviceTypeGroup"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "installedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "powerConsumption": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceInLocationResponseListApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceInLocationResponse"
+            },
+            "nullable": true
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "installedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "powerConsumption": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "macAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastCommunicationAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "usageCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "lastUsedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "brightness": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "temperatureThreshold": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "autoShutdown": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "motionSensitivity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "updateIntervalSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "deviceCategoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceCategoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "powerSource": {
+            "$ref": "#/components/schemas/PowerSource"
+          },
+          "requiresInternet": {
+            "type": "boolean"
+          },
+          "communicationProtocol": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "$ref": "#/components/schemas/DeviceTypeGroup"
+          },
+          "locationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "locationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "floorNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/DeviceResponse"
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceResponseListApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceResponse"
+            },
+            "nullable": true
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DeviceTypeGroup": {
         "enum": [
           0,
@@ -179,6 +915,177 @@
         "type": "integer",
         "format": "int32"
       },
+      "DeviceUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "powerConsumption": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "macAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastCommunicationAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "usageCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "lastUsedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "brightness": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "temperatureThreshold": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "autoShutdown": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "motionSensitivity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "updateIntervalSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "deviceCategoryId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "locationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "floorNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "roomId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "floorNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "roomId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/LocationResponse"
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationResponseListApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationResponse"
+            },
+            "nullable": true
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -193,6 +1100,25 @@
         },
         "additionalProperties": false
       },
+      "ObjectApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "nullable": true
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PermissionLevel": {
         "enum": [
           0,
@@ -202,6 +1128,222 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "PowerSource": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "SensorDataRequest": {
+        "type": "object",
+        "properties": {
+          "voltage": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "current": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "powerConsumptionWatts": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "batteryLevel": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "signalStrengthDb": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "temperature": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "humidity": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "pressure": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "lightLevel": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "cO2Level": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "motionDetected": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "soundLevel": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "airQualityIndex": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "uptimeSeconds": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SensorDataResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "voltage": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "current": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "powerConsumptionWatts": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "batteryLevel": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "signalStrengthDb": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "temperature": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "humidity": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "pressure": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "lightLevel": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "cO2Level": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "motionDetected": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "soundLevel": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "airQualityIndex": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "uptimeSeconds": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SensorDataResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/SensorDataResponse"
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SensorDataResponseListApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SensorDataResponse"
+            },
+            "nullable": true
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "StringApiResponse": {
         "type": "object",

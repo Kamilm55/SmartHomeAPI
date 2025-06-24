@@ -8,7 +8,7 @@ public class DeviceCreateRequest
     public float? PowerConsumption { get; set; }
     public string? MACAddress { get; set; }
     
-    // Settings
+    // Settings (Optional)
     public int? Brightness { get; set; }
     public int? Volume { get; set; }
     public int? TemperatureThreshold { get; set; }

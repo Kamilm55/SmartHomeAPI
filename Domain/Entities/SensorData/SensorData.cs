@@ -82,6 +82,8 @@ public class SensorData
     /// </summary>
     public DateTime RecordedAt { get; set; } = DateTime.UtcNow;
     
-    // One To One
+    // Many To One
+    public Guid DeviceId  { get; set; }
     public Device Device { get; set; } = null!;
+    
 }

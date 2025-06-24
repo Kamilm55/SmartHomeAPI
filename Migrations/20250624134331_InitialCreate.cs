@@ -122,14 +122,15 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                     SoundLevel = table.Column<float>(type: "real", precision: 6, scale: 2, nullable: true),
                     AirQualityIndex = table.Column<int>(type: "integer", nullable: true),
                     UptimeSeconds = table.Column<long>(type: "bigint", nullable: true),
-                    RecordedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    RecordedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeviceId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SensorDatas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SensorDatas_Devices_Id",
-                        column: x => x.Id,
+                        name: "FK_SensorDatas_Devices_DeviceId",
+                        column: x => x.DeviceId,
                         principalTable: "Devices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -170,6 +171,12 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                 name: "IX_Devices_LocationId",
                 table: "Devices",
                 column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SensorDatas_DeviceId",
+                table: "SensorDatas",
+                column: "DeviceId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserDevicePermissions_DeviceId",

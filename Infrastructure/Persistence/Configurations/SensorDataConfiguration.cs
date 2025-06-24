@@ -37,7 +37,7 @@ public class SensorDataConfiguration : IEntityTypeConfiguration<SensorData>
         // One-to-one relationship
         entity.HasOne(sd => sd.Device)
             .WithOne(d => d.SensorData)
-            .HasForeignKey<SensorData>(sd => sd.Id)
+            .HasForeignKey<SensorData>(sd => sd.DeviceId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

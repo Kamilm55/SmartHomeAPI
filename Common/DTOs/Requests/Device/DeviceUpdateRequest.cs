@@ -19,6 +19,6 @@ public class DeviceUpdateRequest
     public int? UpdateIntervalSeconds { get; set; }
 
     // Foreign Keys (optional update)
-    public Guid? DeviceCategoryId { get; set; }
-    public Guid? LocationId { get; set; }
+    public Guid? DeviceCategoryId { get; set; }// // to change category of device
+    public Guid? LocationId { get; set; } // to change location of device
 }

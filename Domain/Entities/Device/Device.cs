@@ -34,10 +34,11 @@ public class Device
     // One to Many (Device and UserDevicePermission) -> Many to Many (User and Device)
     public ICollection<UserDevicePermission> UserDevicePermissions { get; set; } = new HashSet<UserDevicePermission>();
     
-    // One To One
-    public SensorData SensorData { get; set; } = null!;
+    // One To Many
+    public ICollection<SensorData> SensorData { get; set; } = new HashSet<SensorData>();
     
     // Many To One
     public Location Location { get; set; } = null!;
     public Guid LocationId { get; set; }
+    
 }

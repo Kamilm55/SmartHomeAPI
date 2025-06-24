@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Smart_Home_IoT_Device_Management_API.Application.Services;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests.Location;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses;
 
@@ -20,7 +21,7 @@ public class LocationController : ControllerBase
     public async Task<ActionResult<ApiResponse<List<LocationResponse>>>> GetAllLocations()
     {
         var locations = await _locationService.GetAllAsync();
-        return ApiResponse<List<LocationResponse>>.Ok(locations);
+        return ApiResponse<List<LocationResponse>>.Ok(locations,"All Locations");
     }
 
     // GET: /api/v1/locations/{id}/devices

@@ -25,11 +25,11 @@ public class UserService : IUserService
 
     public async Task<UserResponse> GetUserByIdAsync(string idStr)
     {
-        Guid id = GuidParser.Parse(idStr);
+        Guid id = GuidParser.Parse(idStr,nameof(User));
         User? user = await _userRepository.GetByIdAsync(id);
 
         if (user == null)
-            throw new KeyNotFoundException($"User with id {id} not found.");
+            throw new NotFoundException("User",id);
 
         return UserMapper.ToResponse(user);
     }

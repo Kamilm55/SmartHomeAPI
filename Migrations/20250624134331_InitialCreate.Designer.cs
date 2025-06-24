@@ -12,7 +12,7 @@ using Smart_Home_IoT_Device_Management_API.Infrastructure.Persistence;
 namespace Smart_Home_IoT_Device_Management_API.Migrations
 {
     [DbContext(typeof(SmartHomeContext))]
-    [Migration("20250623014540_InitialCreate")]
+    [Migration("20250624134331_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -147,6 +147,7 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
             modelBuilder.Entity("Smart_Home_IoT_Device_Management_API.Domain.Entities.SensorData", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<int?>("AirQualityIndex")
@@ -162,6 +163,9 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                     b.Property<float?>("Current")
                         .HasPrecision(10, 2)
                         .HasColumnType("real");
+
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("uuid");
 
                     b.Property<float?>("Humidity")
                         .HasPrecision(5, 2)
@@ -205,6 +209,9 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DeviceId")
+                        .IsUnique();
 
                     b.ToTable("SensorDatas");
                 });
@@ -335,7 +342,7 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                 {
                     b.HasOne("Smart_Home_IoT_Device_Management_API.Domain.Entities.Device", "Device")
                         .WithOne("SensorData")
-                        .HasForeignKey("Smart_Home_IoT_Device_Management_API.Domain.Entities.SensorData", "Id")
+                        .HasForeignKey("Smart_Home_IoT_Device_Management_API.Domain.Entities.SensorData", "DeviceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
