@@ -74,6 +74,8 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<ISensorReadingService, SensorReadingService>();
 builder.Services.AddScoped<ISensorReadingRepository, SensorReadingRepository>();
 
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+
 builder.Services.AddScoped<IDeviceCategoryRepository, DeviceCategoryRepository>();
 
 builder.Services.AddSingleton<IMapper, CustomMapper>();

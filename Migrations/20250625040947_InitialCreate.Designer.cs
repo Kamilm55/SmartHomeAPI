@@ -12,7 +12,7 @@ using Smart_Home_IoT_Device_Management_API.Infrastructure.Persistence;
 namespace Smart_Home_IoT_Device_Management_API.Migrations
 {
     [DbContext(typeof(SmartHomeContext))]
-    [Migration("20250624134331_InitialCreate")]
+    [Migration("20250625040947_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -210,8 +210,7 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceId")
-                        .IsUnique();
+                    b.HasIndex("DeviceId");
 
                     b.ToTable("SensorDatas");
                 });
@@ -341,8 +340,8 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
             modelBuilder.Entity("Smart_Home_IoT_Device_Management_API.Domain.Entities.SensorData", b =>
                 {
                     b.HasOne("Smart_Home_IoT_Device_Management_API.Domain.Entities.Device", "Device")
-                        .WithOne("SensorData")
-                        .HasForeignKey("Smart_Home_IoT_Device_Management_API.Domain.Entities.SensorData", "DeviceId")
+                        .WithMany("SensorData")
+                        .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -370,8 +369,7 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
 
             modelBuilder.Entity("Smart_Home_IoT_Device_Management_API.Domain.Entities.Device", b =>
                 {
-                    b.Navigation("SensorData")
-                        .IsRequired();
+                    b.Navigation("SensorData");
 
                     b.Navigation("UserDevicePermissions");
                 });

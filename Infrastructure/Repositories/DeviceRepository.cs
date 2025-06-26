@@ -14,7 +14,7 @@ public class DeviceRepository : IDeviceRepository
         _context = context;
     }
 
-    public async Task<List<Device>> GetAllWithCategoryAndLocationAsync()
+    public async Task<List<Device?>> GetAllWithCategoryAndLocationAsync()
     {
         return await _context.Devices
             .Include(d => d.DeviceCategory)
@@ -50,7 +50,7 @@ public class DeviceRepository : IDeviceRepository
     }
 
     
-    public async Task<Device> SaveDeviceAndReturnLatest(Device device)
+    public async Task<Device?> SaveDeviceAndReturnLatest(Device device)
     {
         if (device == null)
             throw new ArgumentNullException(nameof(device));
@@ -77,5 +77,12 @@ public class DeviceRepository : IDeviceRepository
         return await _context.Devices
             .Include(d => d.SensorData)
             .FirstOrDefaultAsync(d => d.Id == deviceId);
+    }
+
+    public async Task<List<Device>> GetAllDevicesAsync()
+    {
+       return await _context.Devices
+           .Include(d => d.DeviceCategory)
+           .ToListAsync();
     }
 }

@@ -22,6 +22,8 @@ public class SensorReadingRepository : ISensorReadingRepository
     {
         return await _context.SensorDatas
             .Where(sd => sd.Device.Id == deviceId)
+            .Include(sd => sd.Device)
+            .Include(sd => sd.Device.DeviceCategory)
             .OrderByDescending(sd => sd.RecordedAt)
             .ToListAsync();
     }
@@ -30,22 +32,25 @@ public class SensorReadingRepository : ISensorReadingRepository
     {
         return await _context.SensorDatas
             .Where(sd => sd.Device.Id == deviceId)
+            .Include(sd => sd.Device)
+            .Include(sd => sd.Device.DeviceCategory)
             .OrderByDescending(sd => sd.RecordedAt)
             .FirstOrDefaultAsync();
     }
 
     public async Task<SensorData> SaveChangesAndReturnLatestAsync(SensorData reading)
     {
-        await _context.SensorDatas.AddAsync(reading);
-        
         if (reading == null)
             throw new ArgumentNullException(nameof(reading));
+        
+        await _context.SensorDatas.AddAsync(reading);
 
         // Save changes
         await _context.SaveChangesAsync();
 
         var savedSensorData = await _context.SensorDatas
             .Include(sd => sd.Device)
+            .Include(sd => sd.Device.DeviceCategory)
             .FirstOrDefaultAsync(sd => sd.Id == reading.Id);
 
         if (savedSensorData == null)

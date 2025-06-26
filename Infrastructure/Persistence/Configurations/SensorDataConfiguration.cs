@@ -34,10 +34,9 @@ public class SensorDataConfiguration : IEntityTypeConfiguration<SensorData>
         entity.Property(sd => sd.UptimeSeconds);
             
 
-        // One-to-one relationship
+        // Many-to-one relationship
         entity.HasOne(sd => sd.Device)
-            .WithOne(d => d.SensorData)
-            .HasForeignKey<SensorData>(sd => sd.DeviceId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithMany(d => d.SensorData)
+            .HasForeignKey(sd => sd.DeviceId);
     }
 }

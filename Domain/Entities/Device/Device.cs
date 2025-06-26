@@ -41,4 +41,25 @@ public class Device
     public Location Location { get; set; } = null!;
     public Guid LocationId { get; set; }
     
+    public override string ToString()
+    {
+        return $"Device {{ " +
+               $"Id = {Id}, " +
+               $"IsActive = {IsActive}, " +
+               $"InstalledAt = {InstalledAt}, " +
+               $"SerialNumber = {SerialNumber}, " +
+               $"PowerConsumption = {PowerConsumption?.ToString() ?? "null"}, " +
+               $"MACAddress = {MACAddress ?? "null"}, " +
+               $"LastCommunicationAt = {LastCommunicationAt?.ToString() ?? "null"}, " +
+               $"UsageCount = {UsageCount?.ToString() ?? "null"}, " +
+               $"LastUsedAt = {LastUsedAt?.ToString() ?? "null"}, " +
+               $"DeviceSetting = {DeviceSetting}, " +
+               $"DeviceCategoryId = {DeviceCategoryId}, " +
+               $"LocationId = {LocationId}, " +
+               $"UserDevicePermissions Count = {UserDevicePermissions.Count}, " +
+               $"SensorData Count = {SensorData.Count} " +
+               $"}}";
+    }
+
+    
 }

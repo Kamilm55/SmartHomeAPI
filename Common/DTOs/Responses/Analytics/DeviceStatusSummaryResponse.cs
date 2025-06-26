@@ -4,4 +4,7 @@ public class DeviceStatusSummaryResponse
 {
     public int OnlineCount { get; set; }
     public int OfflineCount { get; set; }
+    
+    public List<DevicesResponseInSummary> DevicesResponseInSummary { get; set; }
+       
 }

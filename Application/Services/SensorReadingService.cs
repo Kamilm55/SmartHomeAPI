@@ -35,20 +35,35 @@ public class SensorReadingService : ISensorReadingService
     {
         Guid guid = GuidParser.Parse(deviceId,nameof(Device));
 
-        _logger.LogInformation("LOG 0");
         Device? device = await _deviceRepository.GetByIdWithSensorDataAsync(guid);
-        _logger.LogCritical("Device: " + device.ToString());
           if (device == null) throw new NotFoundException(nameof(Device), guid);
           
-          
-        SensorData? reading = _mapper.ToSensorData(request);
-        _logger.LogInformation(reading.ToString());
-        reading.Device.Id = device.Id;
         
+        SensorData? reading = new SensorData
+        {
+            Voltage = request.Voltage,
+            Current = request.Current,
+            PowerConsumptionWatts = request.PowerConsumptionWatts,
+            BatteryLevel = request.BatteryLevel,
+            SignalStrengthDb = request.SignalStrengthDb,
+            Temperature = request.Temperature,
+            Humidity = request.Humidity,
+            Pressure = request.Pressure,
+            LightLevel = request.LightLevel,
+            CO2Level = request.CO2Level,
+            MotionDetected = request.MotionDetected,
+            SoundLevel = request.SoundLevel,
+            AirQualityIndex = request.AirQualityIndex,
+            UptimeSeconds = request.UptimeSeconds,
+            DeviceId = device.Id
+            //EnergyUsage = request.EnergyUsage
+        };
         
         SensorData savedReading = await _repository.SaveChangesAndReturnLatestAsync(reading);
 
-        return _mapper.ToSensorDataResponse(new SensorData());
+        _logger.LogCritical("SensorData:"  + reading.ToString());
+        
+        return _mapper.ToSensorDataResponse(savedReading);
     }
 
     public async Task<List<SensorDataResponse>> GetAllReadingsAsync(string deviceId)

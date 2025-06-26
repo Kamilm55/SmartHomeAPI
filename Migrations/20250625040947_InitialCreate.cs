@@ -175,8 +175,7 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_SensorDatas_DeviceId",
                 table: "SensorDatas",
-                column: "DeviceId",
-                unique: true);
+                column: "DeviceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserDevicePermissions_DeviceId",

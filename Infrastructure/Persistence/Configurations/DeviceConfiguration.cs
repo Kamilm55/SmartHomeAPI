@@ -33,11 +33,11 @@ namespace Smart_Home_IoT_Device_Management_API.Infrastructure.Persistence.Config
             .WithMany(l => l.Devices)
             .HasForeignKey(d => d.LocationId);
 
-        // One-to-One → SensorData
-        entity.HasOne(d => d.SensorData)
+        // One-to-Many → SensorData
+        entity.HasMany(d => d.SensorData)
             .WithOne(sd => sd.Device)
-            .HasForeignKey<SensorData>(sd => sd.Id)
-            .OnDelete(DeleteBehavior.Cascade);// Deleting Device deletes its SensorData
+            .HasForeignKey(sd => sd.Id)
+            .OnDelete(DeleteBehavior.Cascade);// Deleting Device deletes its SensorDatas
 
         // One-to-Many → UserDevicePermission
         entity.HasMany(d => d.UserDevicePermissions)

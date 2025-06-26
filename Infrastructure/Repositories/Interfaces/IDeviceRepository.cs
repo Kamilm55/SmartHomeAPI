@@ -8,9 +8,10 @@ public interface IDeviceRepository
     Task Update(Device device);
     Task Delete(Device device); 
     
-    Task<List<Device>> GetAllWithCategoryAndLocationAsync();
+    Task<List<Device?>> GetAllWithCategoryAndLocationAsync();
     Task<Device?> GetByIdWithCategoryAndLocationAsync(Guid id);
 
-    Task<Device> SaveDeviceAndReturnLatest(Device device);
+    Task<Device?> SaveDeviceAndReturnLatest(Device device);
     Task<Device?> GetByIdWithSensorDataAsync(Guid deviceId);
+    Task<List<Device>> GetAllDevicesAsync();
 }

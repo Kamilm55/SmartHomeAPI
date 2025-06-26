@@ -207,8 +207,7 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceId")
-                        .IsUnique();
+                    b.HasIndex("DeviceId");
 
                     b.ToTable("SensorDatas");
                 });
@@ -338,8 +337,8 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
             modelBuilder.Entity("Smart_Home_IoT_Device_Management_API.Domain.Entities.SensorData", b =>
                 {
                     b.HasOne("Smart_Home_IoT_Device_Management_API.Domain.Entities.Device", "Device")
-                        .WithOne("SensorData")
-                        .HasForeignKey("Smart_Home_IoT_Device_Management_API.Domain.Entities.SensorData", "DeviceId")
+                        .WithMany("SensorData")
+                        .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -367,8 +366,7 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
 
             modelBuilder.Entity("Smart_Home_IoT_Device_Management_API.Domain.Entities.Device", b =>
                 {
-                    b.Navigation("SensorData")
-                        .IsRequired();
+                    b.Navigation("SensorData");
 
                     b.Navigation("UserDevicePermissions");
                 });

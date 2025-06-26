@@ -33,26 +33,41 @@ public class CustomMapper : IMapper
         };
     }
     
-    public SensorData ToSensorData(SensorDataRequest request)
+    public SensorData ToSensorData(SensorDataRequest request , Guid deviceId)
     {
         return new SensorData
         {
             Temperature = request.Temperature,
             Humidity = request.Humidity,
-            MotionDetected = request.MotionDetected
+            MotionDetected = request.MotionDetected,
+            DeviceId = deviceId
             //EnergyUsage = request.EnergyUsage
         };
     }
 
-    public SensorDataResponse ToSensorDataResponse(SensorData data)
+    public SensorDataResponse ToSensorDataResponse(SensorData sensorData)
     {
-        return new SensorDataResponse
+       return new SensorDataResponse
         {
-            Temperature = data.Temperature,
-            Humidity = data.Humidity,
-            MotionDetected = data.MotionDetected
-           // EnergyUsage = data.EnergyUsage,
-            //Timestamp = data.Timestamp
+            Id = sensorData.Id,
+            Voltage = sensorData.Voltage,
+            Current = sensorData.Current,
+            PowerConsumptionWatts = sensorData.PowerConsumptionWatts,
+            BatteryLevel = sensorData.BatteryLevel,
+            SignalStrengthDb = sensorData.SignalStrengthDb,
+            Temperature = sensorData.Temperature,
+            Humidity = sensorData.Humidity,
+            Pressure = sensorData.Pressure,
+            LightLevel = sensorData.LightLevel,
+            CO2Level = sensorData.CO2Level,
+            MotionDetected = sensorData.MotionDetected,
+            SoundLevel = sensorData.SoundLevel,
+            AirQualityIndex = sensorData.AirQualityIndex,
+            UptimeSeconds = sensorData.UptimeSeconds,
+            RecordedAt = sensorData.RecordedAt,
+            DeviceId = sensorData.DeviceId,
+            DeviceCategoryName = sensorData.Device.DeviceCategory.Name
+            // EnergyUsage = data.EnergyUsage
         };
     }
 }

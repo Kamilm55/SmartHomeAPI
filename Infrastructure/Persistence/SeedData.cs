@@ -110,6 +110,46 @@ public static class SeedData
     context.DeviceCategories.AddRange(categories);
 
     // 4. Devices
+    var sensorDataSet1 = new HashSet<SensorData>();
+    sensorDataSet1.Add(new SensorData 
+    {
+        Id = Guid.NewGuid(),
+        Voltage = 230,
+        Current = 0.05f,
+        PowerConsumptionWatts = 5,
+        BatteryLevel = null,
+        SignalStrengthDb = -40,
+        Temperature = 22.5f,
+        Humidity = 45.0f,
+        Pressure = 1013,
+        LightLevel = 300,
+        CO2Level = 400,
+        MotionDetected = false,
+        SoundLevel = 30,
+        AirQualityIndex = 30,
+        UptimeSeconds = 432000, // 5 days
+        RecordedAt = DateTime.UtcNow
+    });
+    var sensorDataSet2 = new HashSet<SensorData>();
+    sensorDataSet2.Add(new SensorData
+    {
+        Id = Guid.NewGuid(),
+        Voltage = 230,
+        Current = 0.04f,
+        PowerConsumptionWatts = 9.5f,
+        BatteryLevel = null,
+        SignalStrengthDb = -42,
+        Temperature = 21,
+        Humidity = 50,
+        Pressure = 1012,
+        LightLevel = 500,
+        CO2Level = 390,
+        MotionDetected = false,
+        SoundLevel = 25,
+        AirQualityIndex = 28,
+        UptimeSeconds = 259200, // 3 days
+        RecordedAt = DateTime.UtcNow
+    });
     var devices = new List<Device>
     {
         new Device
@@ -134,26 +174,7 @@ public static class SeedData
                 MotionSensitivity = null,
                 UpdateIntervalSeconds = 60
             },
-            
-            SensorData = new SensorData // One to Many olmalidi
-            {
-                Id = Guid.NewGuid(),
-                Voltage = 230,
-                Current = 0.05f,
-                PowerConsumptionWatts = 5,
-                BatteryLevel = null,
-                SignalStrengthDb = -40,
-                Temperature = 22.5f,
-                Humidity = 45.0f,
-                Pressure = 1013,
-                LightLevel = 300,
-                CO2Level = 400,
-                MotionDetected = false,
-                SoundLevel = 30,
-                AirQualityIndex = 30,
-                UptimeSeconds = 432000, // 5 days
-                RecordedAt = DateTime.UtcNow
-            }
+            SensorData =  sensorDataSet1
         },
         new Device
         {
@@ -177,25 +198,7 @@ public static class SeedData
                 MotionSensitivity = null,
                 UpdateIntervalSeconds = null
             },
-            SensorData = new SensorData
-            {
-                Id = Guid.NewGuid(),
-                Voltage = 230,
-                Current = 0.04f,
-                PowerConsumptionWatts = 9.5f,
-                BatteryLevel = null,
-                SignalStrengthDb = -42,
-                Temperature = 21,
-                Humidity = 50,
-                Pressure = 1012,
-                LightLevel = 500,
-                CO2Level = 390,
-                MotionDetected = false,
-                SoundLevel = 25,
-                AirQualityIndex = 28,
-                UptimeSeconds = 259200, // 3 days
-                RecordedAt = DateTime.UtcNow
-            }
+            SensorData = sensorDataSet2
         },
         new Device
         {
@@ -219,27 +222,8 @@ public static class SeedData
                 MotionSensitivity = 5,
                 UpdateIntervalSeconds = 30
             },
-            SensorData = new SensorData
-            {
-                Id = Guid.NewGuid(),
-                Voltage = 3.7f,
-                Current = 1.1f,
-                PowerConsumptionWatts = 4,
-                BatteryLevel = 85,
-                SignalStrengthDb = -50,
-                Temperature = 20,
-                Humidity = 40,
-                Pressure = 1010,
-                LightLevel = 150,
-                CO2Level = 400,
-                MotionDetected = true,
-                SoundLevel = 40,
-                AirQualityIndex = 32,
-                UptimeSeconds = 86400, // 1 day
-                RecordedAt = DateTime.UtcNow
-            }
-        }
-    };
+            SensorData = sensorDataSet2
+    }};
     context.Devices.AddRange(devices);
     // also saves sensor data entities because of One To One relationship
 

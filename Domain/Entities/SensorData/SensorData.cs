@@ -86,4 +86,28 @@ public class SensorData
     public Guid DeviceId  { get; set; }
     public Device Device { get; set; } = null!;
     
+    public override string ToString()
+    {
+        return $"SensorData {{ " +
+               $"Id = {Id}, " +
+               $"Voltage = {Voltage?.ToString() ?? "null"} V, " +
+               $"Current = {Current?.ToString() ?? "null"} A, " +
+               $"PowerConsumptionWatts = {PowerConsumptionWatts?.ToString() ?? "null"} W, " +
+               $"BatteryLevel = {BatteryLevel?.ToString() ?? "null"}%, " +
+               $"SignalStrengthDb = {SignalStrengthDb?.ToString() ?? "null"} dBm, " +
+               $"Temperature = {Temperature?.ToString() ?? "null"} °C, " +
+               $"Humidity = {Humidity?.ToString() ?? "null"}%, " +
+               $"Pressure = {Pressure?.ToString() ?? "null"} hPa, " +
+               $"LightLevel = {LightLevel?.ToString() ?? "null"} lux, " +
+               $"CO2Level = {CO2Level?.ToString() ?? "null"} ppm, " +
+               $"MotionDetected = {MotionDetected?.ToString() ?? "null"}, " +
+               $"SoundLevel = {SoundLevel?.ToString() ?? "null"} dB, " +
+               $"AirQualityIndex = {AirQualityIndex?.ToString() ?? "null"}, " +
+               $"UptimeSeconds = {UptimeSeconds?.ToString() ?? "null"} sec, " +
+               $"RecordedAt = {RecordedAt:u}, " +
+               $"DeviceId = {DeviceId} " +
+               $"}}";
+    }
+
+    
 }

@@ -8,6 +8,6 @@ public interface IMapper
 {
     LocationResponse ToLocationResponse(Location location);
     DeviceInLocationResponse ToDeviceInLocationResponse(Device device);
-    SensorData ToSensorData(SensorDataRequest request);
+    SensorData ToSensorData(SensorDataRequest request, Guid deviceId);
     SensorDataResponse ToSensorDataResponse(SensorData sensorData);
 }

@@ -19,4 +19,6 @@ public class SensorDataResponse
     public int? AirQualityIndex { get; set; }
     public long? UptimeSeconds { get; set; }
     public DateTime RecordedAt { get; set; }
+    public Guid DeviceId { get; set; }
+    public string DeviceCategoryName { get; set; }
 }
