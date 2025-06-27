@@ -1,1 +1,16 @@
-.vs
+# Build
+bin/
+obj/
+
+# User-specific
+*.user
+*.suo
+*.userosscache
+
+# Visual Studio
+.vs/
+
+# Others
+*.log
+*.swp
+*.DS_Store
