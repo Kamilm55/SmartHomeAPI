@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses;
 using Smart_Home_IoT_Device_Management_API.Domain.Entities;
@@ -11,4 +12,5 @@ public interface IUserService
     Task<User?> AuthenticateAsync(string email, string password);
 
     string getHashedPwd(string pwd);
+    Task<UserResponse?> getCurrentUser();
 }

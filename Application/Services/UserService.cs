@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Smart_Home_IoT_Device_Management_API.Application.Mappers;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests;
@@ -14,14 +15,20 @@ namespace Smart_Home_IoT_Device_Management_API.Application.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly ILogger<UserService> _logger;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService(IUserRepository userRepository,IPasswordHasher _passwordHasher)
+    public UserService(IUserRepository userRepository, ILogger<UserService> logger, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
-        this._passwordHasher = _passwordHasher;
+        _logger = logger;
+        _passwordHasher = passwordHasher;
+        _unitOfWork = unitOfWork;
+        _httpContextAccessor = httpContextAccessor;
     }
+
 
     public async Task<UserResponse> GetUserByIdAsync(string idStr)
     {
@@ -60,10 +67,10 @@ public class UserService : IUserService
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Username = request.Username,
+            UserName = request.Username,
             Email = request.Email,
             FullName = request.FullName,
-            HashedPassword = hashedPassword,
+            PasswordHash = hashedPassword,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -81,15 +88,27 @@ public class UserService : IUserService
 
         if (user == null)
         {
-            return null;
+            throw new InvalidEmailOrPasswordException("Invalid email or password");
         }
 
-        var isValidPassword = _passwordHasher.Verify(password, user.HashedPassword);
-        return isValidPassword ? user : null;
+        bool isValidPassword = _passwordHasher.Verify(password, user.PasswordHash);
+        
+        return isValidPassword ? user : throw new InvalidEmailOrPasswordException("Invalid email or password");
     }
 
     public string getHashedPwd(string pwd)
     {
-      return   _passwordHasher.Hash(pwd);
+      return  _passwordHasher.Hash(pwd);
+    }
+
+    public async Task<UserResponse?> getCurrentUser()
+    {
+        string? emailFromToken = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email) 
+                                 ??  throw new ArgumentNullException("Email from token is null");
+        
+        User? user = await _userRepository.GetByEmailAsync(emailFromToken) 
+                                 ?? throw new NotFoundException($"User not fount with email:{emailFromToken}");
+        
+        return UserMapper.ToResponse(user);
     }
 }

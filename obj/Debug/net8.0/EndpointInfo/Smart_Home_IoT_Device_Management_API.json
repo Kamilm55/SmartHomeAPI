@@ -5,6 +5,74 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/v1/Analytics/devices/{id}/energy-usage": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalEnergyUsageResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalEnergyUsageResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalEnergyUsageResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Analytics/device-status": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceStatusSummaryResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceStatusSummaryResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceStatusSummaryResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/devices": {
       "get": {
         "tags": [
@@ -495,26 +563,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseApiResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -567,7 +615,7 @@
         }
       }
     },
-    "/login": {
+    "/api/v1/User/login": {
       "post": {
         "tags": [
           "User"
@@ -608,6 +656,35 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/User/me": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseApiResponse"
                 }
               }
             }
@@ -677,6 +754,35 @@
           "locationId": {
             "type": "string",
             "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceDTOInUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "installedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceCategoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "manufacturer": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -899,6 +1005,46 @@
         },
         "additionalProperties": false
       },
+      "DeviceStatusSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "onlineCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offlineCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "devicesResponseInSummary": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DevicesResponseInSummary"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceStatusSummaryResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/DeviceStatusSummaryResponse"
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DeviceTypeGroup": {
         "enum": [
           0,
@@ -987,6 +1133,27 @@
           "locationId": {
             "type": "string",
             "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DevicesResponseInSummary": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceCategoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "locationName": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -1118,16 +1285,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "PermissionLevel": {
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ],
-        "type": "integer",
-        "format": "int32"
       },
       "PowerSource": {
         "enum": [
@@ -1299,6 +1456,14 @@
           "recordedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceCategoryName": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1365,6 +1530,35 @@
         },
         "additionalProperties": false
       },
+      "TotalEnergyUsageResponse": {
+        "type": "object",
+        "properties": {
+          "totalKWh": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TotalEnergyUsageResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TotalEnergyUsageResponse"
+          },
+          "meta": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UserCreateRequest": {
         "type": "object",
         "properties": {
@@ -1383,34 +1577,6 @@
           "fullName": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserDevicePermissionResponse": {
-        "type": "object",
-        "properties": {
-          "deviceId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "serialNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "deviceCategory": {
-            "type": "string",
-            "nullable": true
-          },
-          "deviceTypeGroup": {
-            "$ref": "#/components/schemas/DeviceTypeGroup"
-          },
-          "locationName": {
-            "type": "string",
-            "nullable": true
-          },
-          "permission": {
-            "$ref": "#/components/schemas/PermissionLevel"
           }
         },
         "additionalProperties": false
@@ -1448,10 +1614,10 @@
             "format": "date-time",
             "nullable": true
           },
-          "devicePermissions": {
+          "devices": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserDevicePermissionResponse"
+              "$ref": "#/components/schemas/DeviceDTOInUserResponse"
             },
             "nullable": true
           }

@@ -58,6 +58,8 @@ public class GlobalExceptionHandlerMiddleware
 
         context.Response.StatusCode = statusCode;
 
+        Console.WriteLine(exception.Message);
+        Console.WriteLine(response.ToString());
         var json = JsonSerializer.Serialize(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
         await context.Response.WriteAsync(json);

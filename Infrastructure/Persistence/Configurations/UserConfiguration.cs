@@ -11,23 +11,21 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         entity.HasKey(u => u.Id);
         
         // Unique fields
-        entity.HasIndex(u => u.Username).IsUnique();
+        entity.HasIndex(u => u.UserName).IsUnique();
         entity.HasIndex(u => u.Email).IsUnique();
 
         // Required fields
-        entity.Property(u => u.Username).IsRequired().HasMaxLength(30);
+        entity.Property(u => u.UserName).IsRequired().HasMaxLength(30);
         entity.Property(u => u.Email).IsRequired().HasMaxLength(50);
-        entity.Property(u => u.HashedPassword).IsRequired();
         entity.Property(u => u.CreatedAt).IsRequired();
         entity.Property(u => u.UpdatedAt).IsRequired(false);
         entity.Property(u => u.LastLoginAt).IsRequired(false);
 
         // Optional fields
         entity.Property(u => u.FullName).HasMaxLength(200);
+
+        entity.HasMany(u => u.Devices)
+            .WithMany(d => d.Users);
         
-        entity.HasMany(u => u.UserDevicePermissions)
-            .WithOne(udp => udp.User)
-            .HasForeignKey(udp => udp.UserId)
-            .OnDelete(DeleteBehavior.Cascade); // When a User is deleted, delete related UserDevicePermissions;
     }
 }

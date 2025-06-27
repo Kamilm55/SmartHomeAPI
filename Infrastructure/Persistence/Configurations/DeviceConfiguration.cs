@@ -40,9 +40,8 @@ namespace Smart_Home_IoT_Device_Management_API.Infrastructure.Persistence.Config
             .OnDelete(DeleteBehavior.Cascade);// Deleting Device deletes its SensorDatas
 
         // One-to-Many → UserDevicePermission
-        entity.HasMany(d => d.UserDevicePermissions)
-            .WithOne(udp => udp.Device)
-            .HasForeignKey(udp => udp.DeviceId);
+        entity.HasMany(d => d.Users)
+            .WithMany(u => u.Devices);
 
         entity.OwnsOne(d => d.DeviceSetting, ds =>
         {

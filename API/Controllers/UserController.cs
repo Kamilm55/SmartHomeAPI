@@ -2,15 +2,9 @@ using Smart_Home_IoT_Device_Management_API.Application.Services;
 
 
 using Microsoft.AspNetCore.Mvc;
-using Smart_Home_IoT_Device_Management_API.Application.Services;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.Data;
-using Smart_Home_IoT_Device_Management_API.Common;
+using Microsoft.AspNetCore.Authorization;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses;
-using Smart_Home_IoT_Device_Management_API.Common.Exceptions;
-using Smart_Home_IoT_Device_Management_API.Domain.Entities;
 using LoginRequest = Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests.LoginRequest;
 
 namespace Smart_Home_IoT_Device_Management_API.Controllers
@@ -23,19 +17,20 @@ namespace Smart_Home_IoT_Device_Management_API.Controllers
         private readonly IJwtService _jwtService;
 
         // Inject the service layer
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IJwtService jwtService)
         {
             _userService = userService;
+            _jwtService = jwtService;
         }
 
         // GET: api/v1/user/{id}
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<ActionResult<ApiResponse<UserResponse>>> GetUserById(string id)
         {
             UserResponse? userResponse = await _userService.GetUserByIdAsync(id);
 
+            Console.WriteLine(userResponse);
             return ApiResponse<UserResponse>.Ok(userResponse);
         }
 
@@ -50,25 +45,23 @@ namespace Smart_Home_IoT_Device_Management_API.Controllers
         
         //
 
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public async Task<ActionResult<ApiResponse<string>>> Login(LoginRequest request)
         {
             // Validate user credentials (e.g., check username and password)
             var user = await _userService.AuthenticateAsync(request.Email, request.Password);
-
-            if (user == null)
-            {
-                throw new InvalidEmailOrPasswordException("Invalid email or password");
-            }
-
+            
+            
             var token = _jwtService.GenerateToken(user);
             return ApiResponse<string>.Ok(token, "Login successful");
         }
 
-        /*[HttpPost]
-        public string Login(string pwd)
+        [HttpGet("me")]
+        [Authorize ]
+        public async Task<ActionResult<ApiResponse<UserResponse>>> GetCurrentUser()
         {
-           return  _userService.getHashedPwd(pwd);
-        }*/
+            UserResponse? userResponse = await _userService.getCurrentUser();
+            return ApiResponse<UserResponse>.Ok(userResponse,"Current user info:");
+        }
     }
 }

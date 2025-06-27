@@ -16,14 +16,12 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByIdAsync(Guid id)
     {
-        // Include related UserDevicePermissions with Device and Location for detailed info
+        // Include related Devices with Device and Location for detailed info
         return await _context.Users
-            .Include(u => u.UserDevicePermissions)
-            .ThenInclude(udp => udp.Device)
+            .Include(u => u.Devices)
             .ThenInclude(d => d.DeviceCategory)
             
-            .Include(u => u.UserDevicePermissions)
-            .ThenInclude(udp => udp.Device)
+            .Include(u => u.Devices)
             .ThenInclude(d => d.Location)
             
             .FirstOrDefaultAsync(u => u.Id == id);
@@ -38,7 +36,7 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByUsernameAsync(string username)
     {
         return await _context.Users
-            .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
+            .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
     }
 
     public async Task AddAsync(User user)

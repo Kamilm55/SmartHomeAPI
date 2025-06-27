@@ -1,3 +1,4 @@
+/*
 using Smart_Home_IoT_Device_Management_API.Domain.Enum;
 
 namespace Smart_Home_IoT_Device_Management_API.Domain.Entities.UserAndDevicePermission;
@@ -18,3 +19,4 @@ public class UserDevicePermission
     // Unique PermissionLevel per User-Device pair
     public PermissionLevel Permission { get; set; }
 }
+*/

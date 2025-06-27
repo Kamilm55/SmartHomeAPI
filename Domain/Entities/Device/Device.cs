@@ -1,5 +1,4 @@
 using Smart_Home_IoT_Device_Management_API.Domain.Entities.Owned;
-using Smart_Home_IoT_Device_Management_API.Domain.Entities.UserAndDevicePermission;
 using Smart_Home_IoT_Device_Management_API.Domain.Enum;
 
 namespace Smart_Home_IoT_Device_Management_API.Domain.Entities;
@@ -31,8 +30,8 @@ public class Device
     public DeviceCategory DeviceCategory { get; set; } = null!;
     public Guid DeviceCategoryId  { get; set; }
 
-    // One to Many (Device and UserDevicePermission) -> Many to Many (User and Device)
-    public ICollection<UserDevicePermission> UserDevicePermissions { get; set; } = new HashSet<UserDevicePermission>();
+    //  Many to Many (User and Device)
+    public ICollection<User> Users { get; set; } = new HashSet<User>();
     
     // One To Many
     public ICollection<SensorData> SensorData { get; set; } = new HashSet<SensorData>();
@@ -53,13 +52,14 @@ public class Device
                $"LastCommunicationAt = {LastCommunicationAt?.ToString() ?? "null"}, " +
                $"UsageCount = {UsageCount?.ToString() ?? "null"}, " +
                $"LastUsedAt = {LastUsedAt?.ToString() ?? "null"}, " +
-               $"DeviceSetting = {DeviceSetting}, " +
+               $"DeviceSetting = {DeviceSetting?.ToString() ?? "null"}, " +
                $"DeviceCategoryId = {DeviceCategoryId}, " +
                $"LocationId = {LocationId}, " +
-               $"UserDevicePermissions Count = {UserDevicePermissions.Count}, " +
-               $"SensorData Count = {SensorData.Count} " +
+               $"Users.Count = {Users?.Count ?? 0}, " +
+               $"SensorData.Count = {SensorData?.Count ?? 0} " +
                $"}}";
     }
+
 
     
 }

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+/*using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Smart_Home_IoT_Device_Management_API.Domain.Entities.UserAndDevicePermission;
 
@@ -32,4 +32,4 @@ public class UserDevicePermissionConfiguration : IEntityTypeConfiguration<UserDe
         // Permission enum stored as string in DB
         entity.Property(udp => udp.Permission).IsRequired().HasConversion<string>();
     }
-}
+}*/

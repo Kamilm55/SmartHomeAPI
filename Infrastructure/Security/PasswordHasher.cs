@@ -27,7 +27,7 @@ public class PasswordHasher : IPasswordHasher
         return Convert.ToBase64String(result);
     }
 
-    public bool Verify(string hashedPassword, string inputPassword)
+    public bool Verify( string inputPassword, string hashedPassword)
     {
         byte[] decoded = Convert.FromBase64String(hashedPassword);
 

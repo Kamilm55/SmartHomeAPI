@@ -9,24 +9,33 @@ public static class UserMapper
     {
         if (user == null) return null!;
 
+        var deviceDtoSet = new HashSet<DeviceDTOInUserResponse>();
+        foreach (var device in user.Devices)
+        {
+            var deviceDto = new DeviceDTOInUserResponse
+            {
+                Id = device.Id,
+                IsActive = device.IsActive,
+                InstalledAt = device.InstalledAt,
+                SerialNumber = device.SerialNumber,
+                
+                DeviceCategoryName = device.DeviceCategory.Name,
+                Manufacturer = device.DeviceCategory.Manufacturer
+                
+            }; 
+            deviceDtoSet.Add(deviceDto);
+        }
+
         return new UserResponse
         {
             Id = user.Id,
-            Username = user.Username,
+            Username = user.UserName,
             Email = user.Email,
             FullName = user.FullName,
             CreatedAt = user.CreatedAt,
             UpdatedAt = user.UpdatedAt,
             LastLoginAt = user.LastLoginAt,
-            DevicePermissions = user.UserDevicePermissions.Select(udp => new UserDevicePermissionResponse
-            {
-                DeviceId = udp.DeviceId,
-                SerialNumber = udp.Device.SerialNumber,
-                DeviceCategory = udp.Device.DeviceCategory.Name,
-                DeviceTypeGroup = udp.Device.DeviceCategory.DeviceType,
-                LocationName = udp.Device.Location.Name,
-                Permission = udp.Permission
-            }).ToList()
+            Devices = deviceDtoSet
         };
     }
 }

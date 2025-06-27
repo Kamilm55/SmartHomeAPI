@@ -12,5 +12,5 @@ public class UserResponse
     public DateTime? UpdatedAt { get; set; }
     public DateTime? LastLoginAt { get; set; }
 
-    public List<UserDevicePermissionResponse> DevicePermissions { get; set; } = new();
+    public ICollection<DeviceDTOInUserResponse> Devices { get; set; } = new HashSet<DeviceDTOInUserResponse>();
 }
