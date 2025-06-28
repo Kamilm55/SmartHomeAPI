@@ -13,5 +13,7 @@ public interface IDeviceRepository
 
     Task<Device?> SaveDeviceAndReturnLatest(Device device);
     Task<Device?> GetByIdWithSensorDataAsync(Guid deviceId);
+    Task<Device?> GetByIdAsync(Guid deviceId);
     Task<List<Device>> GetAllDevicesAsync();
+    Task<List<Device>> GetAllByUserIdWithCategoryAndLocationAsync(Guid userId);
 }

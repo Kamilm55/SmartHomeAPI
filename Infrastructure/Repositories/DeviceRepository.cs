@@ -14,7 +14,16 @@ public class DeviceRepository : IDeviceRepository
         _context = context;
     }
 
-    public async Task<List<Device?>> GetAllWithCategoryAndLocationAsync()
+    public async Task<List<Device>> GetAllByUserIdWithCategoryAndLocationAsync(Guid userId)
+    {
+        return await _context.Devices
+            .Where(d => d.Users.Any(u => u.Id == userId))
+            .Include(d => d.DeviceCategory)
+            .Include(d => d.DeviceSetting)
+            .Include(d => d.Location)
+            .ToListAsync();
+    }
+    public async Task<List<Device>> GetAllWithCategoryAndLocationAsync()
     {
         return await _context.Devices
             .Include(d => d.DeviceCategory)
@@ -79,10 +88,18 @@ public class DeviceRepository : IDeviceRepository
             .FirstOrDefaultAsync(d => d.Id == deviceId);
     }
 
+    public async Task<Device?> GetByIdAsync(Guid deviceId)
+    {
+        return await _context.Devices
+            .FirstOrDefaultAsync(d => d.Id == deviceId);
+    }
+
     public async Task<List<Device>> GetAllDevicesAsync()
     {
        return await _context.Devices
            .Include(d => d.DeviceCategory)
            .ToListAsync();
     }
+
+    
 }

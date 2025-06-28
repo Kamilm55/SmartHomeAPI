@@ -19,17 +19,17 @@ public class UserService : IUserService
     private readonly ILogger<UserService> _logger;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UserManager<User> _userManager;
+    private readonly IAuthService _authService;
 
-    public UserService(IUserRepository userRepository, ILogger<UserService> logger, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
+    public UserService(IUserRepository userRepository, ILogger<UserService> logger, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork, UserManager<User> userManager, IAuthService authService)
     {
         _userRepository = userRepository;
         _logger = logger;
         _passwordHasher = passwordHasher;
         _unitOfWork = unitOfWork;
-        _httpContextAccessor = httpContextAccessor;
         _userManager = userManager;
+        _authService = authService;
     }
 
 
@@ -110,26 +110,17 @@ public class UserService : IUserService
 
     public async Task<UserResponse?> getCurrentUser()
     {
-        var user = await getCurrentUserFromToken();
+        var user = await _authService.getCurrentUserFromToken();
 
         return UserMapper.ToResponse(user);
     }
 
-    private async Task<User> getCurrentUserFromToken()
-    {
-        string? emailFromToken = _httpContextAccessor.HttpContext?.User?
-                                     .FindFirst(ClaimTypes.Email)?.Value
-                                 ?? throw new ArgumentNullException("Email from token is null");
-
-        User? user = await _userRepository.GetByEmailAsync(emailFromToken) 
-                     ?? throw new NotFoundException($"User not fount with email:{emailFromToken}");
-        return user;
-    }
+    
 
     public async Task<List<UserResponse>> GetAllUsersBelongToCurrentUser()
     {
-        User? user = await getCurrentUserFromToken();
-        List<User> users = await _userRepository.getByDevicesAsync(user.Devices);
+        User? user = await _authService.getCurrentUserFromToken();
+        List<User> users = await _userRepository.GetByDevicesAsync(user.Devices);
         
         return users.Select(UserMapper.ToResponse).ToList();
     }

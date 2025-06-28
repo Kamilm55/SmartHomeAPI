@@ -46,7 +46,7 @@ public class UserRepository : IUserRepository
         await _context.Users.AddAsync(user);
     }
 
-    public async Task<List<User>> getByDevicesAsync(ICollection<Device> userDevices)
+    public async Task<List<User>> GetByDevicesAsync(ICollection<Device> userDevices)
     {
         var deviceIds = userDevices.Select(d => d.Id).ToList();
 
@@ -57,4 +57,5 @@ public class UserRepository : IUserRepository
             .ToListAsync();
         
     }
+    
 }

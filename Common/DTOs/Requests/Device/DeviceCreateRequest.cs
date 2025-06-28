@@ -3,7 +3,6 @@ namespace Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests.Device;
 public class DeviceCreateRequest
 {
     public bool IsActive { get; set; } = true;
-    public DateTime InstalledAt { get; set; }
     public string SerialNumber { get; set; } = null!;
     public float? PowerConsumption { get; set; }
     public string? MACAddress { get; set; }
@@ -16,7 +15,7 @@ public class DeviceCreateRequest
     public int? MotionSensitivity { get; set; }
     public int? UpdateIntervalSeconds { get; set; }
 
-    // Foreign Keys
+    // Required
     public Guid DeviceCategoryId { get; set; }
     public Guid LocationId { get; set; }
 }
