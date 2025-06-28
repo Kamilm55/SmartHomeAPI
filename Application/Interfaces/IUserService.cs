@@ -13,4 +13,7 @@ public interface IUserService
 
     string getHashedPwd(string pwd);
     Task<UserResponse?> getCurrentUser();
+    Task<List<UserResponse>> GetAllUsersBelongToCurrentUser();
+    Task AssignAdminRoleAsync(string id);
+    Task AssignUserRoleAsync(string id, UserAccessLevel accessLevel);
 }

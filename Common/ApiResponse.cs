@@ -32,14 +32,14 @@ public class ApiResponse<T>
     }
 
     // 204 No Content - Success but no data to return
-    public static ActionResult<ApiResponse<T>> NoContent(string? message = null)
+    public static ActionResult<ApiResponse<string>> NoContent(string? message = null)
     {
-        var res = new ApiResponse<T>
+        var res = new ApiResponse<string>
         {
             IsSuccess = true,
             Message = message ?? "No content."
         };
-        return new NoContentResult(); 
+        return new OkObjectResult(res); 
     }
     
     // Paginated response (200 OK)

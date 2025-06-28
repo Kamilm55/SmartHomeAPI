@@ -30,6 +30,8 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _context.Users
+            .Include(u => u.Devices)
+            .ThenInclude(ud => ud.DeviceCategory)
             .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
     }
 
@@ -42,5 +44,17 @@ public class UserRepository : IUserRepository
     public async Task AddAsync(User user)
     {
         await _context.Users.AddAsync(user);
+    }
+
+    public async Task<List<User>> getByDevicesAsync(ICollection<Device> userDevices)
+    {
+        var deviceIds = userDevices.Select(d => d.Id).ToList();
+
+        return await _context.Users
+            .Include(u => u.Devices)
+            .ThenInclude(ud => ud.DeviceCategory)
+            .Where(u => u.Devices.Any(d => deviceIds.Contains(d.Id)))
+            .ToListAsync();
+        
     }
 }

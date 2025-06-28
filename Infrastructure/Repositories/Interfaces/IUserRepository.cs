@@ -8,4 +8,5 @@ public interface IUserRepository
     Task<User?> GetByEmailAsync(string email);
     Task<User?> GetByUsernameAsync(string username);
     Task AddAsync(User user);
+    Task<List<User>> getByDevicesAsync(ICollection<Device> userDevices);
 }

@@ -53,9 +53,9 @@ public class DeviceController : ControllerBase
 
     // DELETE /api/v1/devices/{id}
     [HttpDelete("{id}")]
-    public async Task<ActionResult<ApiResponse<object>>> DeleteDevice(string id)
+    public async Task<ActionResult<ApiResponse<string>>> DeleteDevice(string id)
     {
         await _deviceService.DeleteDeviceAsync(id);
-        return ApiResponse<object>.NoContent($"Device with id:{id} deleted successfully");
+        return ApiResponse<string>.NoContent($"Device with id:{id} deleted successfully");
     }
-}
+} 
