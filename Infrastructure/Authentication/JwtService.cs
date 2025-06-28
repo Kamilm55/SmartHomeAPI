@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Smart_Home_IoT_Device_Management_API.Application.Services;
@@ -12,14 +13,16 @@ public class JwtService : IJwtService
 {
     private readonly JwtSettings _jwtSettings;
     private readonly ILogger<JwtService> _logger;
+    private readonly UserManager<User> _userManager;
 
-    public JwtService(IOptions<JwtSettings> jwtSettings, ILogger<JwtService> logger)
+    public JwtService(IOptions<JwtSettings> jwtSettings, ILogger<JwtService> logger, UserManager<User> userManager)
     {
         _jwtSettings = jwtSettings.Value;
         _logger = logger;
+        _userManager = userManager;
     }
 
-    public string GenerateToken(User user)
+    public async Task<string> GenerateToken(User user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
 
@@ -29,13 +32,25 @@ public class JwtService : IJwtService
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName),
-            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Name, user.UserName!),
+            new(ClaimTypes.Email, user.Email!),
 
             // Custom claims
             new("createdAt", createdAt.ToString("o")),   // ISO 8601 format
-            new("expiredAt", expiredAt.ToString("o"))    // ISO 8601 format
+            new("expiredAt", expiredAt.ToString("o"))
         };
+
+        // Add Identity role claims
+        var roles = await _userManager.GetRolesAsync(user);
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
+        //  Add Identity-specific claims (like SecurityStamp)
+        var identityClaims = await _userManager.GetClaimsAsync(user);
+        claims.AddRange(identityClaims);
+
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
             issuer: _jwtSettings.Issuer,
@@ -47,5 +62,6 @@ public class JwtService : IJwtService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 
 }

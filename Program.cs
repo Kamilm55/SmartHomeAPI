@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -33,84 +34,6 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 JwtSettings? jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 var key = Encoding.ASCII.GetBytes(jwtSettings.Key);
 
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings.Issuer,
-            ValidAudience = jwtSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(key)
-        };
-        // Exception handling for 401 and 403
-        options.Events = new JwtBearerEvents
-        {
-            OnChallenge = context =>
-            {
-                context.HandleResponse(); // Suppress the default 401 response
-
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                context.Response.ContentType = "application/json";
-
-                var response = new ApiResponse<object>
-                {
-                    IsSuccess = false,
-                    Message = "Unauthorized access. Please login or provide a valid token."
-                };
-
-                var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    ReferenceHandler = ReferenceHandler.Preserve //  Handle cycles
-                });
-
-                return context.Response.WriteAsync(json);
-            },
-
-            OnForbidden = context =>
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                context.Response.ContentType = "application/json";
-
-                var response = new ApiResponse<object>
-                {
-                    IsSuccess = false,
-                    Message = "Access denied. You do not have permission to access this resource."
-                };
-
-                var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    ReferenceHandler = ReferenceHandler.Preserve //  Handle cycles
-                });
-
-                return context.Response.WriteAsync(json);
-            }
-        };
-    });
-
-
-/*builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("SuperAdminOnly", policy => policy.RequireRole(nameof(Role.SuperAdmin)));
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole(nameof(Role.Admin)));
-    options.AddPolicy("UserReadWriteOnly", policy => policy.RequireRole(nameof(Role.UserReadWrite)));
-    options.AddPolicy("UserReadOnlyOnly", policy => policy.RequireRole(nameof(Role.UserReadOnly)));
-});*/
-
-
-//
-
 // Add services
 builder.Services.AddControllers();
 /*.AddJsonOptions(options =>
@@ -141,9 +64,118 @@ builder.Services.AddScoped<IDeviceCategoryRepository, DeviceCategoryRepository>(
 builder.Services.AddScoped<ISeedData, SeedData>();
 builder.Services.AddSingleton<IMapper, CustomMapper>();
 
-builder.Services.AddIdentity<User, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<SmartHomeContext>();
+builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+    {
+        options.Password.RequiredLength = 6;
+        options.Password.RequireDigit = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
+    })
+    .AddEntityFrameworkStores<SmartHomeContext>()
+    .AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        // Your existing options
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                // This fires when token is received from request headers
+
+                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                Console.WriteLine("Token received: " + token);
+                return Task.CompletedTask;
+            },
+
+            OnTokenValidated = context =>
+            {
+                // This fires when token is validated successfully
+
+                var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    Console.WriteLine("Token claims:");
+                    foreach (var claim in claimsIdentity.Claims)
+                    {
+                        Console.WriteLine($"  {claim.Type}: {claim.Value}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No claims found in token.");
+                }
+                return Task.CompletedTask;
+            },
+
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                return Task.CompletedTask;
+            },
+
+            // 🔴 401 Unauthorized - Token is missing or invalid
+            OnChallenge = async context =>
+            {
+                context.HandleResponse(); // Prevent default 401 response
+
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                var response = new ApiResponse<object>
+                {
+                    IsSuccess = false,
+                    Message = "Unauthorized access. Please provide a valid token."
+                };
+
+                var json = JsonSerializer.Serialize(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                await context.Response.WriteAsync(json);
+            },
+
+            // 🔒 403 Forbidden - Token is valid but user doesn't have required roles/policy
+            OnForbidden = async context =>
+            {
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+
+                var response = new ApiResponse<object>
+                {
+                    IsSuccess = false,
+                    Message = "Forbidden. You don't have permission to access this resource."
+                };
+
+                var json = JsonSerializer.Serialize(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                await context.Response.WriteAsync(json);
+            }
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("SuperAdminOnly", policy => policy.RequireRole(nameof(Role.SuperAdmin)));
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole(nameof(Role.Admin)));
+    options.AddPolicy("UserReadWriteOnly", policy => policy.RequireRole(nameof(Role.UserReadWrite)));
+    options.AddPolicy("UserReadOnlyOnly", policy => policy.RequireRole(nameof(Role.UserReadOnly)));
+});
 // Print the connection string 
 builder.Logging.AddConsole();
 

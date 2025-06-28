@@ -4,5 +4,5 @@ namespace Smart_Home_IoT_Device_Management_API.Application.Services;
 
 public interface IJwtService
 {
-    string GenerateToken(User user);
+    Task<string> GenerateToken(User user);
 }

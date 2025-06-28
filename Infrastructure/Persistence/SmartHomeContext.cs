@@ -10,8 +10,6 @@ public class SmartHomeContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
 {
     public SmartHomeContext(DbContextOptions<SmartHomeContext> options) : base(options) { }
     
-   // public DbSet<User> Users { get; set; }
-   // public DbSet<UserDevicePermission> UserDevicePermissions { get; set; }
     public DbSet<Device> Devices { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<SensorData> SensorDatas { get; set; }

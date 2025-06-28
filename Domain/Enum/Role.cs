@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace Smart_Home_IoT_Device_Management_API.Domain.Enum;
 
 public enum Role

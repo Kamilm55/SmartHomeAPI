@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses;
+using Smart_Home_IoT_Device_Management_API.Domain.Enum;
 using LoginRequest = Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests.LoginRequest;
 
 namespace Smart_Home_IoT_Device_Management_API.Controllers
@@ -52,12 +53,12 @@ namespace Smart_Home_IoT_Device_Management_API.Controllers
             var user = await _userService.AuthenticateAsync(request.Email, request.Password);
             
             
-            var token = _jwtService.GenerateToken(user);
+            var token = await _jwtService.GenerateToken(user);
             return ApiResponse<string>.Ok(token, "Login successful");
         }
 
+        [Authorize(Roles = nameof(Role.SuperAdmin))]
         [HttpGet("me")]
-        [Authorize ]
         public async Task<ActionResult<ApiResponse<UserResponse>>> GetCurrentUser()
         {
             UserResponse? userResponse = await _userService.getCurrentUser();

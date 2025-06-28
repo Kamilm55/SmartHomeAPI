@@ -103,8 +103,9 @@ public class UserService : IUserService
 
     public async Task<UserResponse?> getCurrentUser()
     {
-        string? emailFromToken = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email) 
-                                 ??  throw new ArgumentNullException("Email from token is null");
+        string? emailFromToken = _httpContextAccessor.HttpContext?.User?
+                                     .FindFirst(ClaimTypes.Email)?.Value
+                                 ?? throw new ArgumentNullException("Email from token is null");
         
         User? user = await _userRepository.GetByEmailAsync(emailFromToken) 
                                  ?? throw new NotFoundException($"User not fount with email:{emailFromToken}");
