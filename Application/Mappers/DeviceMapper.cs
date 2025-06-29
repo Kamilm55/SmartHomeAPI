@@ -13,11 +13,8 @@ public static class DeviceMapper
             IsActive = device.IsActive,
             InstalledAt = device.InstalledAt,
             SerialNumber = device.SerialNumber,
-            PowerConsumption = device.PowerConsumption,
             MACAddress = device.MACAddress,
             LastCommunicationAt = device.LastCommunicationAt,
-            UsageCount = device.UsageCount,
-            LastUsedAt = device.LastUsedAt,
 
             // DeviceSetting 
             Brightness = device.DeviceSetting?.Brightness,

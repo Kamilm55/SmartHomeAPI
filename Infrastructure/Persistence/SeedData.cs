@@ -123,8 +123,8 @@ public class SeedData : ISeedData
             new SensorData
             {
                 Id = Guid.NewGuid(),
-                Voltage = 230,
-                Current = 0.05f,
+                //Voltage = 230,
+                //Current = 0.05f,
                 PowerConsumptionWatts = 5,
                 BatteryLevel = null,
                 SignalStrengthDb = -40,
@@ -146,8 +146,8 @@ public class SeedData : ISeedData
             new SensorData
             {
                 Id = Guid.NewGuid(),
-                Voltage = 230,
-                Current = 0.04f,
+                //Voltage = 230,
+                //Current = 0.04f,
                 PowerConsumptionWatts = 9.5f,
                 BatteryLevel = null,
                 SignalStrengthDb = -42,
@@ -173,15 +173,13 @@ public class SeedData : ISeedData
                 IsActive = true,
                 InstalledAt = DateTime.UtcNow.AddMonths(-5),
                 SerialNumber = "SN-THERMO-0001",
-                PowerConsumption = 5.0f,
                 MACAddress = "00:1A:C2:7B:00:47",
                 LastCommunicationAt = DateTime.UtcNow.AddMinutes(-10),
-                UsageCount = 1200,
-                LastUsedAt = DateTime.UtcNow.AddMinutes(-5),
                 DeviceCategoryId = categories[0].Id, // FK
                 LocationId = locations[0].Id, // FK
                 DeviceSetting = new DeviceSetting
                 {
+                    Id = Guid.NewGuid(),
                     Brightness = null,
                     Volume = null,
                     TemperatureThreshold = 22,
@@ -197,15 +195,14 @@ public class SeedData : ISeedData
                 IsActive = true,
                 InstalledAt = DateTime.UtcNow.AddMonths(-3),
                 SerialNumber = "SN-LIGHT-0023",
-                PowerConsumption = 9.5f,
                 MACAddress = "00:1B:C3:7B:00:50",
                 LastCommunicationAt = DateTime.UtcNow.AddMinutes(-3),
-                UsageCount = 800,
-                LastUsedAt = DateTime.UtcNow.AddMinutes(-1),
+                
                 DeviceCategoryId = categories[1].Id,
                 LocationId = locations[1].Id,
                 DeviceSetting = new DeviceSetting
                 {
+                    Id = Guid.NewGuid(),
                     Brightness = 75,
                     Volume = null,
                     TemperatureThreshold = null,
@@ -221,15 +218,13 @@ public class SeedData : ISeedData
                 IsActive = true,
                 InstalledAt = DateTime.UtcNow.AddMonths(-1),
                 SerialNumber = "SN-CAM-011",
-                PowerConsumption = 4.0f,
                 MACAddress = "00:1C:C4:7B:00:90",
                 LastCommunicationAt = DateTime.UtcNow.AddMinutes(-15),
-                UsageCount = 300,
-                LastUsedAt = DateTime.UtcNow.AddMinutes(-10),
                 DeviceCategoryId = categories[2].Id,
                 LocationId = locations[2].Id,
                 DeviceSetting = new DeviceSetting
                 {
+                    Id = Guid.NewGuid(),
                     Brightness = null,
                     Volume = null,
                     TemperatureThreshold = null,

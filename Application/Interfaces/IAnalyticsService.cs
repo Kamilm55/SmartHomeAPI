@@ -4,6 +4,8 @@ namespace Smart_Home_IoT_Device_Management_API.Application.Services;
 
 public interface IAnalyticsService
 {
-    Task<DeviceStatusSummaryResponse> GetDeviceStatusSummaryAsync();
     Task<TotalEnergyUsageResponse> GetTotalEnergyUsageResponse(string deviceId);
+    Task<DeviceStatusSummaryResponse> GetDeviceStatusSummaryAsync();
+    Task<LocationUsageStatsResponse> GetUsageByLocationAsync(string locationId);
+    Task<DeviceHealthStatusResponse> GetDeviceHealthStatusAsync(string deviceId);
 }

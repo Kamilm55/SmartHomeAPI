@@ -203,11 +203,8 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     InstalledAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SerialNumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    PowerConsumption = table.Column<float>(type: "real", precision: 10, scale: 2, nullable: true),
                     MACAddress = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     LastCommunicationAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UsageCount = table.Column<int>(type: "integer", nullable: true),
-                    LastUsedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     DeviceSetting_Id = table.Column<Guid>(type: "uuid", nullable: false),
                     DeviceSetting_Brightness = table.Column<int>(type: "integer", nullable: true),
                     DeviceSetting_Volume = table.Column<int>(type: "integer", nullable: true),
@@ -264,8 +261,6 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Voltage = table.Column<float>(type: "real", precision: 10, scale: 2, nullable: true),
-                    Current = table.Column<float>(type: "real", precision: 10, scale: 2, nullable: true),
                     PowerConsumptionWatts = table.Column<float>(type: "real", precision: 10, scale: 2, nullable: true),
                     BatteryLevel = table.Column<int>(type: "integer", nullable: true),
                     SignalStrengthDb = table.Column<float>(type: "real", precision: 6, scale: 2, nullable: true),

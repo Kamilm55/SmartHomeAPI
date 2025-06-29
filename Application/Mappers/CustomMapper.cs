@@ -26,10 +26,10 @@ public class CustomMapper : IMapper
             SerialNumber = device.SerialNumber,
             IsActive = device.IsActive,
             InstalledAt = device.InstalledAt,
-            PowerConsumption = device.PowerConsumption,
             DeviceType = device.DeviceCategory.DeviceType,
             DeviceCategoryid = device.DeviceCategoryId,
             DeviceCategoryName = device.DeviceCategory.Name
+            //PowerConsumption = device.PowerConsumption,
         };
     }
     
@@ -50,8 +50,8 @@ public class CustomMapper : IMapper
        return new SensorDataResponse
         {
             Id = sensorData.Id,
-            Voltage = sensorData.Voltage,
-            Current = sensorData.Current,
+           // Voltage = sensorData.Voltage,
+           // Current = sensorData.Current,
             PowerConsumptionWatts = sensorData.PowerConsumptionWatts,
             BatteryLevel = sensorData.BatteryLevel,
             SignalStrengthDb = sensorData.SignalStrengthDb,

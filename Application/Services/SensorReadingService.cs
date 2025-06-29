@@ -16,18 +16,20 @@ public class SensorReadingService : ISensorReadingService
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<DeviceService> _logger;
+    private readonly IHelperService _helperService;
 
     public SensorReadingService(
         ISensorReadingRepository repository,
         IDeviceRepository deviceRepository,
         IMapper mapper,
         ILogger<DeviceService> logger,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, IHelperService helperService)
     {
         _repository = repository;
         _deviceRepository = deviceRepository;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _helperService = helperService;
         _logger = logger;
     }
 
@@ -37,12 +39,13 @@ public class SensorReadingService : ISensorReadingService
 
         Device? device = await _deviceRepository.GetByIdWithSensorDataAsync(guid);
           if (device == null) throw new NotFoundException(nameof(Device), guid);
-          
+
+        await _helperService.IsThisDeviceBelongsToCurrentUser(guid);
         
         SensorData? reading = new SensorData
         {
-            Voltage = request.Voltage,
-            Current = request.Current,
+            //Voltage = request.Voltage,
+            //Current = request.Current,
             PowerConsumptionWatts = request.PowerConsumptionWatts,
             BatteryLevel = request.BatteryLevel,
             SignalStrengthDb = request.SignalStrengthDb,
@@ -60,8 +63,9 @@ public class SensorReadingService : ISensorReadingService
         };
         
         SensorData savedReading = await _repository.SaveChangesAndReturnLatestAsync(reading);
-
-        _logger.LogCritical("SensorData:"  + reading.ToString());
+        // Change device's lastCommunicationAt
+        device.LastCommunicationAt = DateTime.UtcNow;
+        await _unitOfWork.SaveChangesAsync();
         
         return _mapper.ToSensorDataResponse(savedReading);
     }
@@ -69,6 +73,8 @@ public class SensorReadingService : ISensorReadingService
     public async Task<List<SensorDataResponse>> GetAllReadingsAsync(string deviceId)
     {
         Guid guid = GuidParser.Parse(deviceId,nameof(Device));
+        
+        await _helperService.IsThisDeviceBelongsToCurrentUser(guid);
 
         var data = await _repository.GetAllByDeviceIdAsync(guid);
         return data.Select(_mapper.ToSensorDataResponse).ToList();
@@ -80,6 +86,8 @@ public class SensorReadingService : ISensorReadingService
 
         var reading = await _repository.GetLatestByDeviceIdAsync(guid)
                       ?? throw new NotFoundException("Latest sensor reading not found");
+        
+        await _helperService.IsThisDeviceBelongsToCurrentUser(guid);
 
         return _mapper.ToSensorDataResponse(reading);
     }

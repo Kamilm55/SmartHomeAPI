@@ -16,11 +16,8 @@ namespace Smart_Home_IoT_Device_Management_API.Infrastructure.Persistence.Config
         entity.Property(d => d.SerialNumber).IsRequired().HasMaxLength(100);
 
         // Optional fields 
-        entity.Property(d => d.PowerConsumption).HasPrecision(10, 2); // e.g., 50.75 watts
         entity.Property(d => d.MACAddress).HasMaxLength(50);
         entity.Property(d => d.LastCommunicationAt);
-        entity.Property(d => d.UsageCount);
-        entity.Property(d => d.LastUsedAt);
 
         // Many-to-One → DeviceCategory
         entity.HasOne(d => d.DeviceCategory)

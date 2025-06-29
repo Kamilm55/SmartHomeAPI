@@ -22,15 +22,17 @@ public class LocationRepository : ILocationRepository
     public async Task<List<Location>> GetAllAsync()
     {
         return await _context.Locations
-            .AsNoTracking()
             .ToListAsync();
     }
 
-    public async Task<Location?> GetByIdWithDevicesAsync(Guid id)
+    public async Task<Location?> GetByIdWithDevicesAndDeviceUsersAsync(Guid id)
     {
         return await _context.Locations
             .Include(l => l.Devices)
             .ThenInclude(d => d.DeviceCategory)
+            
+            .Include(l => l.Devices)
+            .ThenInclude(d => d.Users)
             .FirstOrDefaultAsync(l => l.Id == id);
     }
 
@@ -50,5 +52,13 @@ public class LocationRepository : ILocationRepository
             throw new NotFoundException(nameof(Location), locationId.Value);
 
         return true;
+    }
+
+    public async Task<List<Location>> GetAllByUserDevicesIdAsync(ICollection<Device> currentUserDevices)
+    {
+       var deviceIds = currentUserDevices.Select(d => d.Id).ToList();
+       return await _context.Locations
+                               .Where(l => l.Devices.Any(d => deviceIds.Contains(d.Id)))
+                               .ToListAsync();
     }
 }

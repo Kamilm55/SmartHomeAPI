@@ -17,8 +17,8 @@ public class SensorDataConfiguration : IEntityTypeConfiguration<SensorData>
         entity.Property(sd => sd.RecordedAt).IsRequired();
         
         // Optional fields
-        entity.Property(sd => sd.Voltage).HasPrecision(10, 2);
-        entity.Property(sd => sd.Current).HasPrecision(10, 2);
+       // entity.Property(sd => sd.Voltage).HasPrecision(10, 2);
+        //entity.Property(sd => sd.Current).HasPrecision(10, 2);
         entity.Property(sd => sd.PowerConsumptionWatts).HasPrecision(10, 2);
 
         entity.Property(sd => sd.BatteryLevel);

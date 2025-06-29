@@ -6,7 +6,8 @@ public interface ILocationRepository
 {
     Task<Location?> GetByIdAsync(Guid id);
     Task<List<Location>> GetAllAsync();
-    Task<Location?> GetByIdWithDevicesAsync(Guid id);
+    Task<Location?> GetByIdWithDevicesAndDeviceUsersAsync(Guid id);
     Task AddAsync(Location location);
     Task<bool> ExistsByIdAsync(Guid? requestLocationId);
+    Task<List<Location>> GetAllByUserDevicesIdAsync(ICollection<Device> currentUserDevices);
 }

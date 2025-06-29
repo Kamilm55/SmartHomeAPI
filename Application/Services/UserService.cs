@@ -20,16 +20,16 @@ public class UserService : IUserService
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
-    private readonly IAuthService _authService;
+    private readonly IHelperService _helperService;
 
-    public UserService(IUserRepository userRepository, ILogger<UserService> logger, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork, UserManager<User> userManager, IAuthService authService)
+    public UserService(IUserRepository userRepository, ILogger<UserService> logger, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork, UserManager<User> userManager, IHelperService helperService)
     {
         _userRepository = userRepository;
         _logger = logger;
         _passwordHasher = passwordHasher;
         _unitOfWork = unitOfWork;
         _userManager = userManager;
-        _authService = authService;
+        _helperService = helperService;
     }
 
 
@@ -110,7 +110,7 @@ public class UserService : IUserService
 
     public async Task<UserResponse?> getCurrentUser()
     {
-        var user = await _authService.getCurrentUserFromToken();
+        var user = await _helperService.getCurrentUserFromToken();
 
         return UserMapper.ToResponse(user);
     }
@@ -119,7 +119,7 @@ public class UserService : IUserService
 
     public async Task<List<UserResponse>> GetAllUsersBelongToCurrentUser()
     {
-        User? user = await _authService.getCurrentUserFromToken();
+        User? user = await _helperService.getCurrentUserFromToken();
         List<User> users = await _userRepository.GetByDevicesAsync(user.Devices);
         
         return users.Select(UserMapper.ToResponse).ToList();

@@ -46,6 +46,58 @@
     ]
   },
   {
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.API.Controllers.AnalyticsController",
+    "Method": "GetDeviceHealthReport",
+    "RelativePath": "api/v1/Analytics/devices/{id}/health",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ApiResponse\u00601[[Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses.Analytics.DeviceHealthStatusResponse, Smart_Home_IoT_Device_Management_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.API.Controllers.AnalyticsController",
+    "Method": "GetUsageByLocation",
+    "RelativePath": "api/v1/Analytics/locations/{id}/usage",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ApiResponse\u00601[[Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses.Analytics.LocationUsageStatsResponse, Smart_Home_IoT_Device_Management_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "Smart_Home_IoT_Device_Management_API.API.Controllers.DeviceController",
     "Method": "GetAllDevices",
     "RelativePath": "api/v1/devices",
@@ -164,7 +216,69 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.API.Controllers.DeviceController",
+    "Method": "AssignDeviceToAdminRole",
+    "RelativePath": "api/v1/devices/{id}/assign-to-admin",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.API.Controllers.DeviceController",
+    "Method": "AssignDeviceToUserRole",
+    "RelativePath": "api/v1/devices/{id}/assign-to-user",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -330,9 +444,29 @@
     ]
   },
   {
-    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UserController",
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UsersController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/v1/Users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "ApiResponse\u00601[[System.Collections.Generic.List\u00601[[Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses.UserResponse, Smart_Home_IoT_Device_Management_API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UsersController",
     "Method": "CreateUser",
-    "RelativePath": "api/v1/User",
+    "RelativePath": "api/v1/Users",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -356,9 +490,9 @@
     ]
   },
   {
-    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UserController",
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UsersController",
     "Method": "GetUserById",
-    "RelativePath": "api/v1/User/{id}",
+    "RelativePath": "api/v1/Users/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -382,9 +516,66 @@
     ]
   },
   {
-    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UserController",
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UsersController",
+    "Method": "AssignAdminRole",
+    "RelativePath": "api/v1/Users/{id}/assign-admin",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UsersController",
+    "Method": "AssignUserRole",
+    "RelativePath": "api/v1/Users/{id}/assign-userRole",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "accessLevel",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UsersController",
     "Method": "Login",
-    "RelativePath": "api/v1/User/login",
+    "RelativePath": "api/v1/Users/login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -408,9 +599,9 @@
     ]
   },
   {
-    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UserController",
+    "ContainingType": "Smart_Home_IoT_Device_Management_API.Controllers.UsersController",
     "Method": "GetCurrentUser",
-    "RelativePath": "api/v1/User/me",
+    "RelativePath": "api/v1/Users/me",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

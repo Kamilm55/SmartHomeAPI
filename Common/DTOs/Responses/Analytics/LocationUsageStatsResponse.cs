@@ -4,5 +4,5 @@ public class LocationUsageStatsResponse
 {
     public string LocationName { get; set; } = null!;
     public float EnergyUsedKWh { get; set; }
-    public int DeviceCount { get; set; }
+    //public int DeviceCount { get; set; }
 }

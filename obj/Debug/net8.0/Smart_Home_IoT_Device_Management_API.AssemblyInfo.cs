@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Smart_Home_IoT_Device_Management_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+73071fd116e4bf7e03883151ed35eb1d24ece8ef")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37b6edcb46373866b0a5aee907bf95afc1c5eb0e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Smart_Home_IoT_Device_Management_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Smart_Home_IoT_Device_Management_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -5,14 +5,14 @@ using Smart_Home_IoT_Device_Management_API.Infrastructure.Repositories.Interface
 
 namespace Smart_Home_IoT_Device_Management_API.Application.Services;
 
-public class AuthService : IAuthService
+public class HelperService : IHelperService
 {
     private readonly IUserRepository _userRepository;
     private readonly ILogger<UserService> _logger;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UserManager<User> _userManager;
 
-    public AuthService(IUserRepository userRepository, ILogger<UserService> logger, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
+    public HelperService(IUserRepository userRepository, ILogger<UserService> logger, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
     {
         _userRepository = userRepository;
         _logger = logger;
@@ -29,5 +29,14 @@ public class AuthService : IAuthService
         User? user = await _userRepository.GetByEmailAsync(emailFromToken) 
                      ?? throw new NotFoundException($"User not fount with email:{emailFromToken}");
         return user;
+    }
+
+    public async Task IsThisDeviceBelongsToCurrentUser(Guid deviceId)
+    {
+        var currentUser = await getCurrentUserFromToken();
+        if (currentUser.Devices.All(d => d.Id != deviceId))
+        {
+            throw new InvalidOperationException($"Device with id:{currentUser.Id} does not belong to you. You cannot read another's device details!");
+        }
     }
 }

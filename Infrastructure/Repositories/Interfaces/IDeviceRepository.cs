@@ -8,7 +8,7 @@ public interface IDeviceRepository
     Task Update(Device device);
     Task Delete(Device device); 
     
-    Task<List<Device?>> GetAllWithCategoryAndLocationAsync();
+    Task<List<Device>> GetAllWithCategoryAndLocationAsync();
     Task<Device?> GetByIdWithCategoryAndLocationAsync(Guid id);
 
     Task<Device?> SaveDeviceAndReturnLatest(Device device);
@@ -16,4 +16,5 @@ public interface IDeviceRepository
     Task<Device?> GetByIdAsync(Guid deviceId);
     Task<List<Device>> GetAllDevicesAsync();
     Task<List<Device>> GetAllByUserIdWithCategoryAndLocationAsync(Guid userId);
+    Task<Device?> GetByIdAndByUserIdWithCategoryAndLocationAsync(Guid deviceId,Guid userId);
 }

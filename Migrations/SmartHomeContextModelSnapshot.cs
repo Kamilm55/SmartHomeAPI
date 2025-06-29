@@ -185,9 +185,6 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                     b.Property<DateTime?>("LastCommunicationAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("LastUsedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uuid");
 
@@ -195,17 +192,10 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<float?>("PowerConsumption")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("real");
-
                     b.Property<string>("SerialNumber")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<int?>("UsageCount")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -302,10 +292,6 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
                         .HasPrecision(6, 2)
                         .HasColumnType("real");
 
-                    b.Property<float?>("Current")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("real");
-
                     b.Property<Guid>("DeviceId")
                         .HasColumnType("uuid");
 
@@ -345,10 +331,6 @@ namespace Smart_Home_IoT_Device_Management_API.Migrations
 
                     b.Property<long?>("UptimeSeconds")
                         .HasColumnType("bigint");
-
-                    b.Property<float?>("Voltage")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("real");
 
                     b.HasKey("Id");
 

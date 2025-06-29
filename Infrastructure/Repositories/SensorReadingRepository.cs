@@ -58,4 +58,14 @@ public class SensorReadingRepository : ISensorReadingRepository
 
         return savedSensorData;
     }
+
+    public async Task<List<SensorData>> GetAllByDevicesAndByLocationAsync(ICollection<Device> currentUserDevices,Guid locationId)
+    {
+        var deviceIdList = currentUserDevices.Select(d => d.Id).ToList();
+
+        return await _context.SensorDatas
+            .Where(sd => deviceIdList.Contains(sd.DeviceId) && sd.Device.Location.Id == locationId)
+            .ToListAsync();
+    }
+
 }

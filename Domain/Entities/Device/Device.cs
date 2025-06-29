@@ -13,14 +13,13 @@ public class Device
     public Guid Id { get; set; }
     
     public bool IsActive { get; set; } = true; //  device is working or not
-    public DateTime InstalledAt { get; set; }
+    public DateTime InstalledAt { get; set; } = DateTime.UtcNow;
     public string SerialNumber { get; set; } = null!;
     
-    public float? PowerConsumption { get; set; } // This is the rated power listed by the manufacturer — usually found in the device datasheet or label
     public string? MACAddress { get; set; } = null!;
+    
+    // Optional
     public DateTime? LastCommunicationAt { get; set; }
-    public int? UsageCount { get; set; }
-    public DateTime? LastUsedAt { get; set; }
     
     // Owned
     public DeviceSetting DeviceSetting { get; set; } = null!;
@@ -47,11 +46,8 @@ public class Device
                $"IsActive = {IsActive}, " +
                $"InstalledAt = {InstalledAt}, " +
                $"SerialNumber = {SerialNumber}, " +
-               $"PowerConsumption = {PowerConsumption?.ToString() ?? "null"}, " +
                $"MACAddress = {MACAddress ?? "null"}, " +
                $"LastCommunicationAt = {LastCommunicationAt?.ToString() ?? "null"}, " +
-               $"UsageCount = {UsageCount?.ToString() ?? "null"}, " +
-               $"LastUsedAt = {LastUsedAt?.ToString() ?? "null"}, " +
                $"DeviceSetting = {DeviceSetting?.ToString() ?? "null"}, " +
                $"DeviceCategoryId = {DeviceCategoryId}, " +
                $"LocationId = {LocationId}, " +

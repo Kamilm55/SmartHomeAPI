@@ -9,10 +9,11 @@ public class SensorData
     /// <summary>
     /// Real Time power consumption
     /// </summary>
-    public float? Voltage { get; set; }          // Volt
-    public float? Current { get; set; }          // Amper
-    public float? PowerConsumptionWatts { get; set; } // W = V × A
+    //public float? Voltage { get; set; }          // Volt
+    //public float? Current { get; set; }          // Amper
     
+    
+    public float? PowerConsumptionWatts { get; set; } 
     
     public int? BatteryLevel { get; set; }
     
@@ -90,8 +91,8 @@ public class SensorData
     {
         return $"SensorData {{ " +
                $"Id = {Id}, " +
-               $"Voltage = {Voltage?.ToString() ?? "null"} V, " +
-               $"Current = {Current?.ToString() ?? "null"} A, " +
+               //$"Voltage = {Voltage?.ToString() ?? "null"} V, " +
+              // $"Current = {Current?.ToString() ?? "null"} A, " +
                $"PowerConsumptionWatts = {PowerConsumptionWatts?.ToString() ?? "null"} W, " +
                $"BatteryLevel = {BatteryLevel?.ToString() ?? "null"}%, " +
                $"SignalStrengthDb = {SignalStrengthDb?.ToString() ?? "null"} dBm, " +
