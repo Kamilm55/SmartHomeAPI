@@ -1,9 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests.Location;
 
 public class LocationCreateRequest
 {
-    public string Name { get; set; } = null!;  // Required (e.g., "Living Room", "Garage")
-    public string? Description { get; set; }   // Optional extra info (e.g., "Main living area")
-    public int? FloorNumber { get; set; }      // Optional (e.g., 0 = Ground, 1 = First floor)
-    public int? RoomId { get; set; }           // Optional external room identifier
+    [Required(ErrorMessage = "Name is required.")]
+    [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]
+    public string Name { get; set; } = null!;  // Required
+
+    [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
+    public string? Description { get; set; }   // Optional
+
+    [Range(-5, 100, ErrorMessage = "FloorNumber must be between -5 and 100.")]
+    public int FloorNumber { get; set; } = 0;  // Non-nullable with default 0
+
+    [Range(1, int.MaxValue, ErrorMessage = "RoomId must be a positive number.")]
+    public int RoomId { get; set; } = 0;       // Non-nullable with default 0
 }

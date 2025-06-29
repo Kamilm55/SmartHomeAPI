@@ -62,10 +62,10 @@ public class UserService : IUserService
     public async Task<User?> AuthenticateAsync(string email, string password)
     {
         var user = await _userRepository.GetByEmailAsync(email)
-            ?? throw new InvalidEmailOrPasswordException("Invalid email or password");
+            ?? throw new InvalidEmailOrPasswordException("Invalid email");
 
         if (!_passwordHasher.Verify(password, user.PasswordHash))
-            throw new InvalidEmailOrPasswordException("Invalid email or password");
+            throw new InvalidEmailOrPasswordException("Invalid password");
 
         user.LastLoginAt = DateTime.UtcNow;
         await _unitOfWork.SaveChangesAsync();

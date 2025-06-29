@@ -313,12 +313,3 @@ Your project will be evaluated on:
 6. **Documentation** - Clear README and API documentation
 
 Good luck with your project! Focus on getting the core functionality working first, then add advanced features.
-
-
-//
-✅ Design Summary
-I've structured  model like this:/
-
-* DeviceCategory: Describes reusable/shared properties of a type of IoT device (e.g., "Smart Bulb", "Thermostat").
-* Device: A physical instance of a device in the system, installed somewhere and uniquely identified.
-* DeviceTypeGroup: A higher-level optional classification (e.g., Lighting, Climate, Security)

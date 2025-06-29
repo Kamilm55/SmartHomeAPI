@@ -23,8 +23,6 @@ public class SeedData : ISeedData
 
     public async Task InitializeAsync(SmartHomeContext context)
     {
-        Console.WriteLine("Initialize method in Seed data...");
-
         // 1. Seed Roles
         var rolesToSeed = new[] { "SuperAdmin", "Admin", "UserReadWrite", "UserReadOnly" };
         foreach (var roleName in rolesToSeed)
@@ -42,6 +40,7 @@ public class SeedData : ISeedData
         // 3. Avoid seeding domain data if any exists
         if (await context.DeviceCategories.AnyAsync() || await context.Locations.AnyAsync() || await context.Devices.AnyAsync())
         {
+            Console.WriteLine("Initialize method in Seed data...");
             return;
         }
 

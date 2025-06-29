@@ -2,6 +2,7 @@ using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests.Device;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests.Location;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests.SensorData;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses;
+using Smart_Home_IoT_Device_Management_API.Common.Utils;
 using Smart_Home_IoT_Device_Management_API.Domain.Entities;
 using Smart_Home_IoT_Device_Management_API.Domain.Entities.Owned;
 
@@ -108,8 +109,17 @@ public class CustomMapper : IMapper
         device.MACAddress = request.MACAddress ?? device.MACAddress;
         device.IsActive = request.IsActive ?? device.IsActive;
         
-        device.DeviceCategoryId = request.DeviceCategoryId ?? device.DeviceCategoryId;
-        device.LocationId = request.LocationId ?? device.LocationId;
+        if (request.DeviceCategoryId != null)
+        {
+            var deviceCategoryId = GuidParser.Parse(request.DeviceCategoryId, nameof(DeviceCategory));
+            device.DeviceCategoryId = deviceCategoryId;
+        }
+
+        if (request.LocationId != null)
+        {
+            var locationId = GuidParser.Parse(request.LocationId, nameof(Location));
+            device.LocationId = locationId;
+        }
 
         if (device.DeviceSetting != null)
         {

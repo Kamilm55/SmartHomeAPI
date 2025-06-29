@@ -56,11 +56,14 @@ public class DeviceService : IDeviceService
 
     public async Task<DeviceResponse> CreateDeviceAsync(DeviceCreateRequest request)
     {
-        var category = await _deviceCategoryRepository.GetByIdAsync(request.DeviceCategoryId)
-                       ?? throw new NotFoundException("DeviceCategory", request.DeviceCategoryId);
+        var deviceCategoryId = GuidParser.Parse(request.DeviceCategoryId, nameof(DeviceCategory));
+        var locationId = GuidParser.Parse(request.LocationId, nameof(Location));
 
-        var location = await _locationRepository.GetByIdAsync(request.LocationId)
-                       ?? throw new NotFoundException("Location", request.LocationId);
+        var category = await _deviceCategoryRepository.GetByIdAsync(deviceCategoryId)
+                       ?? throw new NotFoundException(nameof(DeviceCategory), deviceCategoryId);
+
+        var location = await _locationRepository.GetByIdAsync(locationId)
+                       ?? throw new NotFoundException(nameof(Location), locationId);
 
         var device = _mapper.ToDevice(request, location, category);
 
@@ -80,12 +83,18 @@ public class DeviceService : IDeviceService
         var deviceById = await GetDeviceOrThrowAsync(deviceId, includeRelations: true);
 
         await _helperService.IsThisDeviceBelongsToCurrentUser(deviceId);
+        
+        if (request.DeviceCategoryId != null)
+        {
+            var deviceCategoryId = GuidParser.Parse(request.DeviceCategoryId, nameof(DeviceCategory));
+            await _deviceCategoryRepository.ExistsByIdAsync(deviceCategoryId);
+        }
 
-        if (request.DeviceCategoryId is not null)
-            await _deviceCategoryRepository.ExistsByIdAsync(request.DeviceCategoryId);
-
-        if (request.LocationId is not null)
-            await _locationRepository.ExistsByIdAsync(request.LocationId);
+        if (request.LocationId != null)
+        {
+            var locationId = GuidParser.Parse(request.LocationId, nameof(Location));
+            await _locationRepository.ExistsByIdAsync(locationId);
+        }
 
 
         var device = _mapper.ToDevice(request,deviceById);
