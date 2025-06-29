@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses.Analytics.Enum;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum DeviceHealthStatus
 {
     Healthy = 0,        // Everything is normal

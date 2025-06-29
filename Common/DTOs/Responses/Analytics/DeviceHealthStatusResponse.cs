@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses.Analytics.Enum;
 
 namespace Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses.Analytics;

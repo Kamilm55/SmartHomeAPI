@@ -8,11 +8,8 @@ public class DeviceResponse
     public bool IsActive { get; set; }
     public DateTime InstalledAt { get; set; }
     public string SerialNumber { get; set; } = null!;
-    public float? PowerConsumption { get; set; }
     public string? MACAddress { get; set; }
     public DateTime? LastCommunicationAt { get; set; }
-    public int? UsageCount { get; set; }
-    public DateTime? LastUsedAt { get; set; }
 
     // Device Setting 
     public int? Brightness { get; set; }
@@ -37,20 +34,4 @@ public class DeviceResponse
     public string LocationName { get; set; } = null!;
     public int? FloorNumber { get; set; }
 
-    // Sensor Data
-    /*public float? Voltage { get; set; }
-    public float? Current { get; set; }
-    public float? PowerConsumptionWatts { get; set; }
-    public int? BatteryLevel { get; set; }
-    public float? SignalStrengthDb { get; set; }
-    public float? Temperature { get; set; }
-    public float? Humidity { get; set; }
-    public float? Pressure { get; set; }
-    public float? LightLevel { get; set; }
-    public float? CO2Level { get; set; }
-    public bool? MotionDetected { get; set; }
-    public float? SoundLevel { get; set; }
-    public int? AirQualityIndex { get; set; }
-    public long? UptimeSeconds { get; set; }
-    public DateTime? SensorRecordedAt { get; set; }*/
 }

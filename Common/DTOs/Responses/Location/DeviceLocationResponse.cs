@@ -11,5 +11,4 @@ public class DeviceInLocationResponse
     public DeviceTypeGroup? DeviceType { get; set; }
     public bool IsActive { get; set; }
     public DateTime InstalledAt { get; set; }
-    public float? PowerConsumption { get; set; }
 }
