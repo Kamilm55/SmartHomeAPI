@@ -11,9 +11,9 @@ public interface IUserService
     Task<UserResponse?> CreateUserAsync(UserCreateRequest userCreateRequest);
     Task<User?> AuthenticateAsync(string email, string password);
 
-    string getHashedPwd(string pwd);
-    Task<UserResponse?> getCurrentUser();
-    Task<List<UserResponse>> GetAllUsersBelongToCurrentUser();
+    string GetHashedPassword(string pwd);
+    Task<UserResponse?> GetCurrentUserAsync();
+    Task<List<UserResponse>> GetAllUsersBelongToCurrentUserAsync();
     Task AssignAdminRoleAsync(string id);
     Task AssignUserRoleAsync(string id, UserAccessLevel accessLevel);
 }

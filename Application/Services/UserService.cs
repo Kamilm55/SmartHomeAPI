@@ -32,158 +32,107 @@ public class UserService : IUserService
         _helperService = helperService;
     }
 
-
     public async Task<UserResponse> GetUserByIdAsync(string idStr)
     {
-        Guid id = GuidParser.Parse(idStr,nameof(User));
-        User? user = await _userRepository.GetByIdAsync(id);
-
-        if (user == null)
-            throw new NotFoundException("User",id);
+        var id = ParseUserId(idStr);
+        var user = await _userRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException("User", id);
 
         return UserMapper.ToResponse(user);
     }
 
     public async Task<UserResponse?> CreateUserAsync(UserCreateRequest request)
     {
-        // 1. Is Exist by email or username
-        User? existingUserWithEmail = await _userRepository
-            .GetByEmailAsync(request.Email);
-
-        if (existingUserWithEmail is not null)
-        {
+        if (await _userRepository.GetByEmailAsync(request.Email) is not null)
             throw new UserAlreadyExistException("email", request.Email);
-        }
-        
-        User? existingUserWithUsername = await _userRepository
-            .GetByUsernameAsync(request.Username);
 
-        if (existingUserWithUsername is not null)
-        {
+        if (await _userRepository.GetByUsernameAsync(request.Username) is not null)
             throw new UserAlreadyExistException("username", request.Username);
-        }
 
-        // 2. Hash the password
         var hashedPassword = _passwordHasher.Hash(request.Password);
 
-        // 3. Create User entity
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            UserName = request.Username,
-            Email = request.Email,
-            FullName = request.FullName,
-            PasswordHash = hashedPassword,
-            CreatedAt = DateTime.UtcNow,
-            SecurityStamp = Guid.NewGuid().ToString(),
-        };
+        var user = UserMapper.ToUser(request, hashedPassword);
 
-        // 4. Save to database
         await _userRepository.AddAsync(user);
         await _unitOfWork.SaveChangesAsync();
 
-        // 5. Return the UserResponse DTO
         return UserMapper.ToResponse(user);
     }
 
     public async Task<User?> AuthenticateAsync(string email, string password)
     {
-        User? user = await _userRepository.GetByEmailAsync(email);
+        var user = await _userRepository.GetByEmailAsync(email)
+            ?? throw new InvalidEmailOrPasswordException("Invalid email or password");
 
-        if (user == null)
-        {
+        if (!_passwordHasher.Verify(password, user.PasswordHash))
             throw new InvalidEmailOrPasswordException("Invalid email or password");
-        }
 
-        bool isValidPassword = _passwordHasher.Verify(password, user.PasswordHash);
-        
         user.LastLoginAt = DateTime.UtcNow;
         await _unitOfWork.SaveChangesAsync();
-        
-        return isValidPassword ? user : throw new InvalidEmailOrPasswordException("Invalid email or password");
+
+        return user;
     }
 
-    public string getHashedPwd(string pwd)
-    {
-      return  _passwordHasher.Hash(pwd);
-    }
+    public string GetHashedPassword(string password) => _passwordHasher.Hash(password);
 
-    public async Task<UserResponse?> getCurrentUser()
+    public async Task<UserResponse?> GetCurrentUserAsync()
     {
         var user = await _helperService.getCurrentUserFromToken();
-
         return UserMapper.ToResponse(user);
     }
 
-    
-
-    public async Task<List<UserResponse>> GetAllUsersBelongToCurrentUser()
+    public async Task<List<UserResponse>> GetAllUsersBelongToCurrentUserAsync()
     {
-        User? user = await _helperService.getCurrentUserFromToken();
-        List<User> users = await _userRepository.GetByDevicesAsync(user.Devices);
-        
+        var user = await _helperService.getCurrentUserFromToken();
+        var users = await _userRepository.GetByDevicesAsync(user.Devices);
         return users.Select(UserMapper.ToResponse).ToList();
     }
 
     public async Task AssignAdminRoleAsync(string id)
     {
-        Guid guid = GuidParser.Parse(id,nameof(User));
-        var user = await _userManager.FindByIdAsync(guid.ToString()) 
-                   ?? throw new NotFoundException($"User not fount with id:{guid.ToString()}");
-      
-        
-        // Get current roles
-        var roles = await _userManager.GetRolesAsync(user);
+        var guid = ParseUserId(id);
+        var user = await FindUserByIdOrThrowAsync(guid);
 
-        // Remove all roles except SuperAdmin
-        foreach (var role in roles)
-        {
-            if (role.Equals(nameof(Role.SuperAdmin), StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException($"You cannot add admin role to user has {role} role"); 
-            }
-            await _userManager.RemoveFromRoleAsync(user, role);
-        }
-
-        // Add Admin role if not already in it
-        if (!await _userManager.IsInRoleAsync(user, nameof(Role.Admin)))
-        {
-            await _userManager.AddToRoleAsync(user, nameof(Role.Admin));
-        }
-
-        
+        await RemoveAllRolesExceptAsync(user, nameof(Role.SuperAdmin));
+        await AddRoleIfNotExistsAsync(user, nameof(Role.Admin));
     }
 
     public async Task AssignUserRoleAsync(string id, UserAccessLevel accessLevel)
     {
-        Guid guid = GuidParser.Parse(id,nameof(User));
-        var user = await _userManager.FindByIdAsync(guid.ToString()) 
-                   ?? throw new NotFoundException($"User not fount with id:{guid.ToString()}");
+        var guid = ParseUserId(id);
+        var user = await FindUserByIdOrThrowAsync(guid);
 
-        
-        // Get current roles
-        var roles = await _userManager.GetRolesAsync(user);
+        await RemoveAllRolesExceptAsync(user, nameof(Role.SuperAdmin), nameof(Role.Admin));
+        var roleName = accessLevel.ToString();
+        await AddRoleIfNotExistsAsync(user, roleName);
+    }
+    
+    // Helpers
+    private static Guid ParseUserId(string id) =>
+        GuidParser.Parse(id, nameof(User));
 
-        foreach (var role in roles)
+    private async Task<User> FindUserByIdOrThrowAsync(Guid id)
+    {
+        var user = await _userManager.FindByIdAsync(id.ToString())
+                   ?? throw new NotFoundException($"User not found with id: {id}");
+        return user;
+    }
+
+    private async Task RemoveAllRolesExceptAsync(User user, params string[] excludedRoles)
+    {
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        foreach (var role in currentRoles)
         {
-            if (role.Equals(nameof(Role.SuperAdmin), StringComparison.OrdinalIgnoreCase)
-                ||  role.Equals(nameof(Role.Admin), StringComparison.OrdinalIgnoreCase)
-                )
-            {
-                throw new InvalidOperationException($"You cannot add {accessLevel} role to user has {role} role"); 
-            }
+            if (excludedRoles.Any(r => r.Equals(role, StringComparison.OrdinalIgnoreCase)))
+                throw new InvalidOperationException($"Operation not allowed: user has protected role '{role}'");
+            
             await _userManager.RemoveFromRoleAsync(user, role);
         }
+    }
 
-        // Add User role if not already in it
-        var roleName = accessLevel.ToString();
-
-        if (!await _userManager.IsInRoleAsync(user, roleName))
-        {
-            // Since roleName matches the Role enum names, add role directly
-            await _userManager.AddToRoleAsync(user, roleName);
-        }
-
-        
+    private async Task AddRoleIfNotExistsAsync(User user, string role)
+    {
+        if (!await _userManager.IsInRoleAsync(user, role))
+            await _userManager.AddToRoleAsync(user, role);
     }
 }

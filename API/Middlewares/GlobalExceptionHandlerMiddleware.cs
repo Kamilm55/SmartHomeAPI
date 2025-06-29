@@ -43,7 +43,7 @@ public class GlobalExceptionHandlerMiddleware
         if (exception is NotFoundException) { statusCode = 404; message = exception.Message; }
 
         if(exception is ArgumentNullException || exception is InvalidOperationException){ statusCode = 400; message = exception.Message; }
-        if (exception is InvalidEmailOrPasswordException) { statusCode = 400; message = exception.Message; }
+        if (exception is InvalidEmailOrPasswordException || exception is UserAlreadyExistException) { statusCode = 400; message = exception.Message; }
         if (exception is ValidationException) { statusCode = 400; message = exception.Message; }
         if (exception is InvalidGuidException) { statusCode = 400; message = exception.Message; }
         if (exception is FormatException) { statusCode = 400; message = exception.Message; }

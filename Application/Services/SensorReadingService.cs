@@ -32,63 +32,55 @@ public class SensorReadingService : ISensorReadingService
         _helperService = helperService;
         _logger = logger;
     }
-
-    public async Task<SensorDataResponse> AddReadingAsync(string deviceId, SensorDataRequest request)
+ public async Task<SensorDataResponse> AddReadingAsync(string deviceId, SensorDataRequest request)
     {
-        Guid guid = GuidParser.Parse(deviceId,nameof(Device));
+        var device = await GetDeviceWithValidationAsync(deviceId);
 
-        Device? device = await _deviceRepository.GetByIdWithSensorDataAsync(guid);
-          if (device == null) throw new NotFoundException(nameof(Device), guid);
+        var reading = _mapper.ToSensorData(request, device.Id);
 
-        await _helperService.IsThisDeviceBelongsToCurrentUser(guid);
-        
-        SensorData? reading = new SensorData
-        {
-            //Voltage = request.Voltage,
-            //Current = request.Current,
-            PowerConsumptionWatts = request.PowerConsumptionWatts,
-            BatteryLevel = request.BatteryLevel,
-            SignalStrengthDb = request.SignalStrengthDb,
-            Temperature = request.Temperature,
-            Humidity = request.Humidity,
-            Pressure = request.Pressure,
-            LightLevel = request.LightLevel,
-            CO2Level = request.CO2Level,
-            MotionDetected = request.MotionDetected,
-            SoundLevel = request.SoundLevel,
-            AirQualityIndex = request.AirQualityIndex,
-            UptimeSeconds = request.UptimeSeconds,
-            DeviceId = device.Id
-            //EnergyUsage = request.EnergyUsage
-        };
-        
-        SensorData savedReading = await _repository.SaveChangesAndReturnLatestAsync(reading);
-        // Change device's lastCommunicationAt
+        var savedReading = await _repository.SaveChangesAndReturnLatestAsync(reading);
+
         device.LastCommunicationAt = DateTime.UtcNow;
         await _unitOfWork.SaveChangesAsync();
-        
+
         return _mapper.ToSensorDataResponse(savedReading);
     }
 
     public async Task<List<SensorDataResponse>> GetAllReadingsAsync(string deviceId)
     {
-        Guid guid = GuidParser.Parse(deviceId,nameof(Device));
-        
-        await _helperService.IsThisDeviceBelongsToCurrentUser(guid);
-
+        var guid = await ValidateAccessAndParseGuidAsync(deviceId);
         var data = await _repository.GetAllByDeviceIdAsync(guid);
         return data.Select(_mapper.ToSensorDataResponse).ToList();
     }
 
     public async Task<SensorDataResponse> GetLatestReadingAsync(string deviceId)
     {
-        Guid guid = GuidParser.Parse(deviceId,nameof(Device));
+        var guid = await ValidateAccessAndParseGuidAsync(deviceId);
 
         var reading = await _repository.GetLatestByDeviceIdAsync(guid)
                       ?? throw new NotFoundException("Latest sensor reading not found");
-        
-        await _helperService.IsThisDeviceBelongsToCurrentUser(guid);
 
         return _mapper.ToSensorDataResponse(reading);
+    }
+
+    // Helpers
+
+    private async Task<Device> GetDeviceWithValidationAsync(string deviceId)
+    {
+        var guid = GuidParser.Parse(deviceId, nameof(Device));
+
+        var device = await _deviceRepository.GetByIdWithSensorDataAsync(guid)
+                     ?? throw new NotFoundException(nameof(Device), guid);
+
+        await _helperService.IsThisDeviceBelongsToCurrentUser(guid);
+
+        return device;
+    }
+
+    private async Task<Guid> ValidateAccessAndParseGuidAsync(string deviceId)
+    {
+        var guid = GuidParser.Parse(deviceId, nameof(Device));
+        await _helperService.IsThisDeviceBelongsToCurrentUser(guid);
+        return guid;
     }
 }

@@ -35,7 +35,7 @@ namespace Smart_Home_IoT_Device_Management_API.Controllers
         [ProducesResponseType(typeof(ApiResponse<List<UserResponse>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<List<UserResponse>>>> GetAllUsers()
         {
-            var users = await _userService.GetAllUsersBelongToCurrentUser();
+            var users = await _userService.GetAllUsersBelongToCurrentUserAsync();
             return ApiResponse<List<UserResponse>>.Ok(users);
         }
 
@@ -138,7 +138,7 @@ namespace Smart_Home_IoT_Device_Management_API.Controllers
         [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<UserResponse>>> GetCurrentUser()
         {
-            var user = await _userService.getCurrentUser();
+            var user = await _userService.GetCurrentUserAsync();
             return ApiResponse<UserResponse>.Ok(user, "Current user info:");
         }
     }

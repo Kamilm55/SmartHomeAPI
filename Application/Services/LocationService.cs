@@ -19,7 +19,8 @@ public class LocationService : ILocationService
     public LocationService(
         ILocationRepository locationRepository,
         IUnitOfWork unitOfWork,
-        IMapper mapper, IHelperService helperService)
+        IMapper mapper,
+        IHelperService helperService)
     {
         _locationRepository = locationRepository;
         _unitOfWork = unitOfWork;
@@ -36,44 +37,41 @@ public class LocationService : ILocationService
 
     public async Task<List<DeviceInLocationResponse>> GetDevicesByLocationIdAsync(string id)
     {
-        var locationId = GuidParser.Parse(nameof(Location), id);
-
-        var location = await _locationRepository.GetByIdWithDevicesAndDeviceUsersAsync(locationId);
-
-        if (location is null)
-            throw new NotFoundException(nameof(Location), locationId);
-
-        await IsThisLocationBelongsToCurrentUser(location);
-
+        var location = await GetLocationWithValidationAsync(id);
         return location.Devices.Select(_mapper.ToDeviceInLocationResponse).ToList();
-    }
-
-    private async Task IsThisLocationBelongsToCurrentUser(Location location)
-    {
-        var currentUser = await _helperService.getCurrentUserFromToken();
-        var allUsersForThisLocation = location.Devices.SelectMany(d => d.Users);
-        
-        if (allUsersForThisLocation.Any(u => u.Id != currentUser.Id))
-        {
-            throw new InvalidOperationException($"This location of device with id:{location.Id} does not belong to you");
-        }
-        
     }
 
     public async Task<LocationResponse> CreateAsync(LocationCreateRequest request)
     {
-        var location = new Location
-        {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            Description = request.Description,
-            FloorNumber = request.FloorNumber,
-            RoomId = request.RoomId
-        };
+        var location = _mapper.ToLocation(request);
 
         await _locationRepository.AddAsync(location);
         await _unitOfWork.SaveChangesAsync();
 
         return _mapper.ToLocationResponse(location);
+    }
+
+    // Helpers
+    private async Task<Location> GetLocationWithValidationAsync(string id)
+    {
+        var locationId = GuidParser.Parse(nameof(Location), id);
+
+        var location = await _locationRepository.GetByIdWithDevicesAndDeviceUsersAsync(locationId)
+                       ?? throw new NotFoundException(nameof(Location), locationId);
+
+        await ValidateLocationOwnershipAsync(location);
+        return location;
+    }
+
+    private async Task ValidateLocationOwnershipAsync(Location location)
+    {
+        var currentUser = await _helperService.getCurrentUserFromToken();
+
+        var allUsersId = location.Devices.SelectMany(d => d.Users).Select(u => u.Id).Distinct();
+
+        if (!allUsersId.Contains(currentUser.Id))
+        {
+            throw new InvalidOperationException($"This location with ID: {location.Id} does not belong to you.");
+        }
     }
 }

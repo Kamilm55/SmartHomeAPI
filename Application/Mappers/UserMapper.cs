@@ -1,3 +1,4 @@
+using Smart_Home_IoT_Device_Management_API.Common.DTOs.Requests;
 using Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses;
 using Smart_Home_IoT_Device_Management_API.Domain.Entities;
 
@@ -36,6 +37,21 @@ public static class UserMapper
             UpdatedAt = user.UpdatedAt,
             LastLoginAt = user.LastLoginAt,
             Devices = deviceDtoSet
+        };
+    }
+
+    public static User ToUser(UserCreateRequest request,string hashedPassword)
+    {
+        if (request == null) return null!;
+       return new User
+        {
+           // Id = Guid.NewGuid(),
+            UserName = request.Username,
+            Email = request.Email,
+            FullName = request.FullName,
+            PasswordHash = hashedPassword,
+            CreatedAt = DateTime.UtcNow,
+            SecurityStamp = Guid.NewGuid().ToString(),
         };
     }
 }

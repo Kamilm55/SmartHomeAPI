@@ -21,12 +21,13 @@ public class DeviceService : IDeviceService
     private readonly IUserRepository  _userRepository;
     private readonly UserManager<User> _userManager;
     private readonly IHelperService _helperService;
+    private readonly IMapper _mapper;
 
     public DeviceService(
         IDeviceRepository deviceRepository,
         IDeviceCategoryRepository deviceCategoryRepository,
         ILocationRepository locationRepository,
-        IUnitOfWork unitOfWork, IUserRepository userRepository, UserManager<User> userManager, IHelperService helperService)
+        IUnitOfWork unitOfWork, IUserRepository userRepository, UserManager<User> userManager, IHelperService helperService, IMapper mapper)
     {
         _deviceRepository = deviceRepository;
         _deviceCategoryRepository = deviceCategoryRepository;
@@ -35,29 +36,24 @@ public class DeviceService : IDeviceService
         _userRepository = userRepository;
         _userManager = userManager;
         _helperService = helperService;
+        _mapper = mapper;
     }
-
     
     public async Task<List<DeviceResponse>> GetAllDevicesAsync()
     {
         var currentUser = await _helperService.getCurrentUserFromToken();
-        
         var devices = await _deviceRepository.GetAllByUserIdWithCategoryAndLocationAsync(currentUser.Id);
         return devices.Select(DeviceMapper.ToDeviceResponse).ToList();
     }
 
     public async Task<DeviceResponse> GetDeviceByIdAsync(string id)
     {
-        Guid deviceId = GuidParser.Parse(id,nameof(Device));
-
-        var device = await _deviceRepository.GetByIdWithCategoryAndLocationAsync(deviceId)
-                     ?? throw new NotFoundException("Device", deviceId);
-        
-        await _helperService.IsThisDeviceBelongsToCurrentUser( deviceId);
-
+        var deviceId = ParseGuid(id, nameof(Device));
+        var device = await GetDeviceOrThrowAsync(deviceId, includeRelations: true);
+        await _helperService.IsThisDeviceBelongsToCurrentUser(deviceId);
         return DeviceMapper.ToDeviceResponse(device);
     }
-    
+
     public async Task<DeviceResponse> CreateDeviceAsync(DeviceCreateRequest request)
     {
         var category = await _deviceCategoryRepository.GetByIdAsync(request.DeviceCategoryId)
@@ -66,142 +62,104 @@ public class DeviceService : IDeviceService
         var location = await _locationRepository.GetByIdAsync(request.LocationId)
                        ?? throw new NotFoundException("Location", request.LocationId);
 
-        var device = new Device
-        {
-            Id = Guid.NewGuid(),
-            IsActive = request.IsActive,
-            SerialNumber = request.SerialNumber,
-            InstalledAt = DateTime.UtcNow,
-            MACAddress = request.MACAddress,
-            DeviceCategoryId = category.Id,
-            LocationId = location.Id,
-            DeviceSetting = new DeviceSetting
-            {
-                Brightness = request.Brightness,
-                Volume = request.Volume,
-                TemperatureThreshold = request.TemperatureThreshold,
-                AutoShutdown = request.AutoShutdown,
-                MotionSensitivity = request.MotionSensitivity,
-                UpdateIntervalSeconds = request.UpdateIntervalSeconds
-            }
-        };
+        var device = _mapper.ToDevice(request, location, category);
 
-        var userSuperAdmin = (await _userManager.GetUsersInRoleAsync(nameof(Role.SuperAdmin))).Single();
+        // Add every device to superAdmin
+        var superAdmin = (await _userManager.GetUsersInRoleAsync(nameof(Role.SuperAdmin))).Single();
+        superAdmin.Devices.Add(device);
+        device.Users.Add(superAdmin);
         
-        
-        userSuperAdmin.Devices.Add(device);
-        
-        await _deviceRepository.AddAsync(device);
         var createdDevice = await _deviceRepository.SaveDeviceAndReturnLatest(device);
 
-            
         return DeviceMapper.ToDeviceResponse(createdDevice);
     }
 
     public async Task<DeviceResponse> UpdateDeviceAsync(string id, DeviceUpdateRequest request)
     {
-        Guid deviceId = GuidParser.Parse(id, nameof(Device));
+        var deviceId = ParseGuid(id, nameof(Device));
+        var deviceById = await GetDeviceOrThrowAsync(deviceId, includeRelations: true);
 
-        var device = await _deviceRepository.GetByIdWithCategoryAndLocationAsync(deviceId)
-                     ?? throw new NotFoundException("Device", deviceId);
-        
         await _helperService.IsThisDeviceBelongsToCurrentUser(deviceId);
 
-        device.SerialNumber = request.SerialNumber ?? device.SerialNumber;
-        device.MACAddress = request.MACAddress ?? device.MACAddress;
-        device.IsActive = request.IsActive ?? device.IsActive;
-
         if (request.DeviceCategoryId is not null)
-        {
-          await _deviceCategoryRepository.ExistsByIdAsync(request.DeviceCategoryId);
-        }
+            await _deviceCategoryRepository.ExistsByIdAsync(request.DeviceCategoryId);
+
         if (request.LocationId is not null)
-        {
-          await _locationRepository.ExistsByIdAsync(request.LocationId);
-        }
+            await _locationRepository.ExistsByIdAsync(request.LocationId);
 
-        device.DeviceCategoryId = request.DeviceCategoryId ?? device.DeviceCategoryId;
-        device.LocationId = request.LocationId ?? device.LocationId;
 
-        if (device.DeviceSetting != null)
-        {
-            device.DeviceSetting.Brightness = request.Brightness ?? device.DeviceSetting.Brightness;
-            device.DeviceSetting.Volume = request.Volume ?? device.DeviceSetting.Volume;
-            device.DeviceSetting.TemperatureThreshold = request.TemperatureThreshold ?? device.DeviceSetting.TemperatureThreshold;
-            device.DeviceSetting.AutoShutdown = request.AutoShutdown ?? device.DeviceSetting.AutoShutdown;
-            device.DeviceSetting.MotionSensitivity = request.MotionSensitivity ?? device.DeviceSetting.MotionSensitivity;
-            device.DeviceSetting.UpdateIntervalSeconds = request.UpdateIntervalSeconds ?? device.DeviceSetting.UpdateIntervalSeconds;
-        }
-        
-        Device? savedDevice = await _deviceRepository.SaveDeviceAndReturnLatest(device);
+        var device = _mapper.ToDevice(request,deviceById);
+
+        var savedDevice = await _deviceRepository.SaveDeviceAndReturnLatest(device);
         return DeviceMapper.ToDeviceResponse(savedDevice);
-        //return DeviceMapper.ToDeviceResponse(await _deviceRepository.GetByIdWithCategoryAndLocationAsync(device.Id););
     }
 
     public async Task DeleteDeviceAsync(string id)
     {
-        Guid deviceId = GuidParser.Parse(id,nameof(Device));
-
-        var device = await _deviceRepository.GetByIdWithCategoryAndLocationAsync(deviceId)
-                     ?? throw new NotFoundException(nameof(Device), deviceId);
-
+        var deviceId = ParseGuid(id, nameof(Device));
+        var device = await GetDeviceOrThrowAsync(deviceId, includeRelations: true);
         await _helperService.IsThisDeviceBelongsToCurrentUser(deviceId);
-        
+
         await _deviceRepository.Delete(device);
         await _deviceRepository.SaveDeviceAndReturnLatest(device);
     }
 
     public async Task AssignDeviceToAdminRoleAsync(string id, string userId)
     {
-        Guid guid = GuidParser.Parse(id,nameof(Device));
-        Device device = await _deviceRepository.GetByIdAsync(guid)
-                        ?? throw new NotFoundException(nameof(Device),guid);
-        
-        Guid userGuid = GuidParser.Parse(userId,nameof(User));
-        User user = await _userRepository.GetByIdAsync(userGuid)
-                        ?? throw new NotFoundException(nameof(User),userGuid);
-        
-        if (!await _userManager.IsInRoleAsync(user, nameof(Role.Admin)))
-        {
-            throw new InvalidOperationException($"User with id:{userId} has no admin role");
-        }
-        
+        var device = await GetDeviceOrThrowAsync(ParseGuid(id, nameof(Device)));
+        var user = await GetUserOrThrowAsync(ParseGuid(userId, nameof(User)));
+
+        // If current user has admin role
+        await ValidateUserRoleAsync(user, nameof(Role.Admin));
+
+        // Assign device to user
         device.Users.Add(user);
         user.Devices.Add(device);
 
         await _unitOfWork.SaveChangesAsync();
-
     }
 
     public async Task AssignDeviceToUserRoleAsync(string id, string userId)
     {
-        
-        Guid guid = GuidParser.Parse(id,nameof(Device));
-        Device device = await _deviceRepository.GetByIdAsync(guid)
-                        ?? throw new NotFoundException(nameof(Device),guid);
-        
-        Guid userGuid = GuidParser.Parse(userId,nameof(User));
-        User user = await _userRepository.GetByIdAsync(userGuid)
-                    ?? throw new NotFoundException(nameof(User),userGuid);
-        
-        if (!await _userManager.IsInRoleAsync(user, nameof(Role.UserReadOnly)) &&
-            !await _userManager.IsInRoleAsync(user, nameof(Role.UserReadWrite)))
-        {
-            throw new InvalidOperationException($"User with id:{userId} has no user role");
-        }
+        var device = await GetDeviceOrThrowAsync(ParseGuid(id, nameof(Device)));
+        var user = await GetUserOrThrowAsync(ParseGuid(userId, nameof(User)));
 
-        var currentUserAdmin = await _helperService.getCurrentUserFromToken();
+        await ValidateUserRoleAsync(user, nameof(Role.UserReadOnly), nameof(Role.UserReadWrite));
 
-        if (currentUserAdmin.Devices.Any(d => d.Id.ToString() != id))
-        {
-            throw new InvalidOperationException($"Device with id:{id} does not belong to you. You cannot assign another admin's device to a user!");
-        }
-
-        
+        await _helperService.IsThisDeviceBelongsToCurrentUser(device.Id);
         device.Users.Add(user);
         user.Devices.Add(device);
 
         await _unitOfWork.SaveChangesAsync();
-        
     }
+    
+    // Helpers
+    private static Guid ParseGuid(string id, string name) => GuidParser.Parse(id, name);
+
+    private async Task<Device> GetDeviceOrThrowAsync(Guid id, bool includeRelations = false)
+    {
+        var device = includeRelations
+            ? await _deviceRepository.GetByIdWithCategoryAndLocationAsync(id)
+            : await _deviceRepository.GetByIdAsync(id);
+
+        return device ?? throw new NotFoundException(nameof(Device), id);
+    }
+
+    private async Task<User> GetUserOrThrowAsync(Guid id)
+    {
+        return await _userRepository.GetByIdAsync(id)
+               ?? throw new NotFoundException(nameof(User), id);
+    }
+
+    private async Task ValidateUserRoleAsync(User user, params string[] validRoles)
+    {
+        foreach (var role in validRoles)
+        {
+            if (await _userManager.IsInRoleAsync(user, role))
+                return;
+        }
+
+        throw new InvalidOperationException($"User with ID: {user.Id} does not have a valid role.");
+    }
+
 }
