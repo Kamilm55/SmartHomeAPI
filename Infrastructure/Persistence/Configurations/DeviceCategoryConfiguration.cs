@@ -22,7 +22,7 @@ public class DeviceCategoryConfiguration : IEntityTypeConfiguration<DeviceCatego
         // Optional fields
         entity.Property(dc => dc.Description).HasMaxLength(250);
         entity.Property(dc => dc.CommunicationProtocol).HasMaxLength(50);
-        entity.Property(dc => dc.DeviceType).HasConversion<string>(); // enum stored as string
+        entity.Property(dc => dc.DeviceType).HasConversion<int>(); // enum stored as int
 
         // Relationships
         entity.HasMany(dc => dc.Devices)

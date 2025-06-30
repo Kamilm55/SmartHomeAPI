@@ -22,12 +22,13 @@ public class DeviceService : IDeviceService
     private readonly UserManager<User> _userManager;
     private readonly IHelperService _helperService;
     private readonly IMapper _mapper;
+    private readonly ILogger<DeviceService> _logger;
 
     public DeviceService(
         IDeviceRepository deviceRepository,
         IDeviceCategoryRepository deviceCategoryRepository,
         ILocationRepository locationRepository,
-        IUnitOfWork unitOfWork, IUserRepository userRepository, UserManager<User> userManager, IHelperService helperService, IMapper mapper)
+        IUnitOfWork unitOfWork, IUserRepository userRepository, UserManager<User> userManager, IHelperService helperService, IMapper mapper, ILogger<DeviceService> logger)
     {
         _deviceRepository = deviceRepository;
         _deviceCategoryRepository = deviceCategoryRepository;
@@ -37,6 +38,7 @@ public class DeviceService : IDeviceService
         _userManager = userManager;
         _helperService = helperService;
         _mapper = mapper;
+        _logger = logger;
     }
     
     public async Task<List<DeviceResponse>> GetAllDevicesAsync()
@@ -74,6 +76,11 @@ public class DeviceService : IDeviceService
         
         var createdDevice = await _deviceRepository.SaveDeviceAndReturnLatest(device);
 
+        _logger.LogCritical(device.ToString());
+        _logger.LogCritical(createdDevice?.ToString());
+        
+        _logger.LogCritical("Is these obj equals:" + device.ToString().Equals(createdDevice?.ToString()));
+        
         return DeviceMapper.ToDeviceResponse(createdDevice);
     }
 
