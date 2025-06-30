@@ -55,6 +55,7 @@ public class DeviceRepository : IDeviceRepository
         
     }
 
+
     public async Task AddAsync(Device device)
     {
         await _context.Devices.AddAsync(device);
@@ -71,30 +72,7 @@ public class DeviceRepository : IDeviceRepository
         _context.Devices.Remove(device);
         return Task.CompletedTask;
     }
-
     
-    public async Task<Device?> SaveDeviceAndReturnLatest(Device device)
-    {
-        if (device == null)
-            throw new ArgumentNullException(nameof(device));
-
-        // Save changes
-        await _context.SaveChangesAsync();
-
-        // Re-fetch with all required navigation properties
-        var savedDevice = await _context.Devices
-            .Include(d => d.DeviceCategory)
-            .Include(d => d.Location)
-            .Include(d => d.DeviceSetting)
-            .FirstOrDefaultAsync(d => d.Id == device.Id);
-
-        if (savedDevice == null)
-            throw new InvalidOperationException($"Device with ID {device.Id} was not found after saving");
-
-
-        return savedDevice;
-    }
-
     public async Task<Device?> GetByIdWithSensorDataAsync(Guid deviceId)
     {
         return await _context.Devices

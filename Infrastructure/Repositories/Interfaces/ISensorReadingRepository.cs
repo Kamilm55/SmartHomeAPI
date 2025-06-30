@@ -7,7 +7,5 @@ public interface ISensorReadingRepository
     Task AddAsync(SensorData data);
     Task<List<SensorData>> GetAllByDeviceIdAsync(Guid deviceId);
     Task<SensorData?> GetLatestByDeviceIdAsync(Guid deviceId);
-
-    Task<SensorData> SaveChangesAndReturnLatestAsync(SensorData reading);
     Task<List<SensorData>> GetAllByDevicesAndByLocationAsync(ICollection<Device> currentUserDevices,Guid locationId);
 }

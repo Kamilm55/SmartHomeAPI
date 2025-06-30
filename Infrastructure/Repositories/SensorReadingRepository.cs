@@ -38,26 +38,7 @@ public class SensorReadingRepository : ISensorReadingRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<SensorData> SaveChangesAndReturnLatestAsync(SensorData reading)
-    {
-        if (reading == null)
-            throw new ArgumentNullException(nameof(reading));
-        
-        await _context.SensorDatas.AddAsync(reading);
-
-        // Save changes
-        await _context.SaveChangesAsync();
-
-        var savedSensorData = await _context.SensorDatas
-            .Include(sd => sd.Device)
-            .Include(sd => sd.Device.DeviceCategory)
-            .FirstOrDefaultAsync(sd => sd.Id == reading.Id);
-
-        if (savedSensorData == null)
-            throw new InvalidOperationException($"Sensor Data with ID {savedSensorData.Id} was not found after saving");
-
-        return savedSensorData;
-    }
+    
 
     public async Task<List<SensorData>> GetAllByDevicesAndByLocationAsync(ICollection<Device> currentUserDevices,Guid locationId)
     {

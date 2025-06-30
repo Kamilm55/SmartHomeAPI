@@ -73,15 +73,12 @@ public class DeviceService : IDeviceService
         var superAdmin = (await _userManager.GetUsersInRoleAsync(nameof(Role.SuperAdmin))).Single();
         superAdmin.Devices.Add(device);
         device.Users.Add(superAdmin);
-        
-        var createdDevice = await _deviceRepository.SaveDeviceAndReturnLatest(device);
 
-        _logger.LogCritical(device.ToString());
-        _logger.LogCritical(createdDevice?.ToString());
+        await _deviceRepository.AddAsync(device);
         
-        _logger.LogCritical("Is these obj equals:" + device.ToString().Equals(createdDevice?.ToString()));
-        
-        return DeviceMapper.ToDeviceResponse(createdDevice);
+        await _unitOfWork.SaveChangesAsync();
+
+        return DeviceMapper.ToDeviceResponse(device);
     }
 
     public async Task<DeviceResponse> UpdateDeviceAsync(string id, DeviceUpdateRequest request)
@@ -102,12 +99,11 @@ public class DeviceService : IDeviceService
             var locationId = GuidParser.Parse(request.LocationId, nameof(Location));
             await _locationRepository.ExistsByIdAsync(locationId);
         }
-
-
+        
         var device = _mapper.ToDevice(request,deviceById);
 
-        var savedDevice = await _deviceRepository.SaveDeviceAndReturnLatest(device);
-        return DeviceMapper.ToDeviceResponse(savedDevice);
+        await _unitOfWork.SaveChangesAsync();
+        return DeviceMapper.ToDeviceResponse(device);
     }
 
     public async Task DeleteDeviceAsync(string id)
@@ -117,7 +113,7 @@ public class DeviceService : IDeviceService
         await _helperService.IsThisDeviceBelongsToCurrentUser(deviceId);
 
         await _deviceRepository.Delete(device);
-        await _deviceRepository.SaveDeviceAndReturnLatest(device);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task AssignDeviceToAdminRoleAsync(string id, string userId)

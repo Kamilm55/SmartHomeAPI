@@ -38,12 +38,12 @@ public class SensorReadingService : ISensorReadingService
 
         var reading = _mapper.ToSensorData(request, device.Id);
 
-        var savedReading = await _repository.SaveChangesAndReturnLatestAsync(reading);
-
+        await _repository.AddAsync(reading);
         device.LastCommunicationAt = DateTime.UtcNow;
+
         await _unitOfWork.SaveChangesAsync();
 
-        return _mapper.ToSensorDataResponse(savedReading);
+        return _mapper.ToSensorDataResponse(reading);
     }
 
     public async Task<List<SensorDataResponse>> GetAllReadingsAsync(string deviceId)
