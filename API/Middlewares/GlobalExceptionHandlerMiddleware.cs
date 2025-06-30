@@ -25,7 +25,6 @@ public class GlobalExceptionHandlerMiddleware
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception caught in global handler.");
-
             await HandleExceptionAsync(context, ex);
         }
     }

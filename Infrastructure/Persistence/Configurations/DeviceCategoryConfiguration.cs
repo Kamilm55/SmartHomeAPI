@@ -17,13 +17,12 @@ public class DeviceCategoryConfiguration : IEntityTypeConfiguration<DeviceCatego
         // Enum - stored as string
         entity.Property(dc => dc.PowerSource).IsRequired().HasConversion<string>(); 
 
-        entity.Property(dc => dc.RequiresInternet)
-            .IsRequired();
+        entity.Property(dc => dc.RequiresInternet).IsRequired();
 
         // Optional fields
         entity.Property(dc => dc.Description).HasMaxLength(250);
         entity.Property(dc => dc.CommunicationProtocol).HasMaxLength(50);
-        entity.Property(dc => dc.DeviceType).HasConversion<int>(); // enum stored as int
+        entity.Property(dc => dc.DeviceType).HasConversion<string>(); // enum stored as string
 
         // Relationships
         entity.HasMany(dc => dc.Devices)

@@ -235,11 +235,10 @@ public class SeedData : ISeedData
             }
         };
 
-        // 8. Seed Users (domain users, if you still need to, but avoid confusion with Identity users)
         // Get existing roles from DB (or store their IDs after seeding)
         var roles = context.Roles.ToDictionary(r => r.Name, r => r.Id);
 
-// Create your users
+        // Create your users
         var domainUsers = new List<User>
         {
             new User
@@ -266,7 +265,7 @@ public class SeedData : ISeedData
             }
         };
 
-// Manually assign roles by inserting into AspNetUserRoles
+        // Manually assign roles by inserting into AspNetUserRoles
         var userRoles = new List<IdentityUserRole<Guid>>
         {
             new IdentityUserRole<Guid>
@@ -282,8 +281,8 @@ public class SeedData : ISeedData
         };
 
         // Add users and their roles to the context
-        context.Users.AddRange(domainUsers);
-        context.UserRoles.AddRange(userRoles); 
+        await context.Users.AddRangeAsync(domainUsers);
+        await context.UserRoles.AddRangeAsync(userRoles); 
 
         // Assign shared devices
         foreach (var device in devices)

@@ -28,7 +28,7 @@ public static class JwtAuthExtensions
         .AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
-            options.SaveToken = true;
+            options.SaveToken = true; // It tells ASP.NET Core’s JWT bearer authentication handler to save the token (usually the JWT from the Authorization header) into the current AuthenticationProperties, which can then be accessed later during the request.
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -57,7 +57,7 @@ public static class JwtAuthExtensions
                         Console.WriteLine("Token claims:");
                         foreach (var claim in claimsIdentity.Claims)
                         {
-                            Console.WriteLine($"  {claim.Type}: {claim.Value}");
+                            Console.WriteLine($"{claim.Type}: {claim.Value}");
                         }
                     }
                     else
@@ -75,7 +75,7 @@ public static class JwtAuthExtensions
 
                 OnChallenge = async context =>
                 {
-                    context.HandleResponse();
+                    context.HandleResponse(); // Skips any default logic for this challenge -> “Don’t run the built-in challenge/response behavior — I’m handling this myself.”
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 

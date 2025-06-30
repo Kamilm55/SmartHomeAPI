@@ -31,7 +31,7 @@ public class ApiResponse<T>
         return new CreatedResult(location, res); // URI can be provided if needed
     }
 
-    // 204 No Content - Success but no data to return
+    // 200 No Content - Success but no data to return
     public static ActionResult<ApiResponse<string>> NoContent(string? message = null)
     {
         var res = new ApiResponse<string>
@@ -54,19 +54,5 @@ public class ApiResponse<T>
         };
         return new OkObjectResult(res);
     }
-    
-    
-    // Error responses --> Done by Exception handler
-    // 500 Internal Server Error - Unexpected server error
-    /*public static ActionResult<ApiResponse<T>> InternalServerError(string message = "An unexpected error occurred.")
-    {
-        var res = new ApiResponse<T>
-        {
-            IsSuccess = false,
-            Message = message
-        };
-        return new ObjectResult(res) { StatusCode = 500 };
-    }*/
-
     
 }

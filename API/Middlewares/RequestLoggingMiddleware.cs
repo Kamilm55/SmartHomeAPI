@@ -14,7 +14,7 @@ public class RequestLoggingMiddleware
     public async Task Invoke(HttpContext context)
     {
         _logger.LogInformation($"HTTP {context.Request.Method} - {context.Request.Path}");
-        await _next(context);
+        await _next(context); // Passes the request to the next middleware in the pipeline
         _logger.LogInformation($"HTTP {context.Response.StatusCode}");
     }
 }
