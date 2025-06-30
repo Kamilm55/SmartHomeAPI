@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Smart_Home_IoT_Device_Management_API.Domain.Enum;
 
 namespace Smart_Home_IoT_Device_Management_API.Common.DTOs.Responses.Device;
@@ -27,6 +28,8 @@ public class DeviceResponse
     public PowerSource PowerSource { get; set; }
     public bool RequiresInternet { get; set; }
     public string? CommunicationProtocol { get; set; }
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public DeviceTypeGroup? DeviceType { get; set; }
 
     // Location
